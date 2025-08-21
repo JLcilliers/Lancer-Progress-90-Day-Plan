@@ -365,7 +365,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="connection-status" id="connectionStatus">
+        <div class="connection-status" id="connectionStatus" onclick="showConnectionHelp()" style="cursor: pointer;">
             📡 Connecting to Supabase...
         </div>
 
@@ -1269,6 +1269,24 @@ CREATE POLICY "Enable all for anon" ON lancer_seo_tasks
             }
         }
 
+        // Show connection help
+        function showConnectionHelp() {
+            if (!isConnected) {
+                alert(`📡 Connection Status: Offline
+
+Your Supabase project appears to be paused.
+
+To restore cloud sync:
+1. Go to supabase.com/dashboard
+2. Select your project
+3. Click "Restore project" if it shows as paused
+4. Wait 30-60 seconds
+5. Click "Retry Connection" button below
+
+Note: Your progress is being saved locally and will sync once connected.`);
+            }
+        }
+        
         // Retry connection to Supabase
         async function retryConnection() {
             console.log('Retrying Supabase connection...');
