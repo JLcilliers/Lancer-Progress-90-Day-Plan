@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lancer Skincare - 90 Day SEO Implementation Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .progress-overview {
+            background: #f8f9fa;
+            padding: 30px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .weeks-container {
+            padding: 30px;
+        }
+
+        .week-card {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .week-card:nth-child(4n+2) {
+            border-left-color: #764ba2;
+        }
+
+        .week-card:nth-child(4n+3) {
+            border-left-color: #f093fb;
+        }
+
+        .week-card:nth-child(4n+4) {
+            border-left-color: #a8edea;
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .week-title {
+            font-size: 1.6em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .week-progress {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .task-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .task-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-top: 2px;
+        }
+
+        .task-container.completed .task-checkbox {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .task-container.completed .task-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .task-title {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .task-container.completed .task-title {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .task-details {
+            padding-left: 39px;
+        }
+
+        .task-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .task-container.completed .task-description {
+            opacity: 0.5;
+        }
+
+        .expected-outcome {
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .expected-outcome-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .expected-outcome-text {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .task-container.completed .expected-outcome {
+            opacity: 0.6;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .week-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+
+            .task-description {
+                font-size: 0.9em;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .controls {
+                display: none;
+            }
+            
+            .task-container {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Lancer Skincare - 90 Day SEO Implementation Plan</h1>
+            <div class="subtitle">Technical SEO & Content Optimization Roadmap</div>
+        </div>
+
+        <div class="progress-overview">
+            <div class="stat-card">
+                <div class="number" id="totalTasks">13</div>
+                <div class="label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="completedTasks">0</div>
+                <div class="label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="percentComplete">0%</div>
+                <div class="label">Progress</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weeks-container">
+            <!-- Week 1 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 1</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="1">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-1">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Fix Broken Links & 404 Errors</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Repair broken internal links: Fixed nine broken internal hyperlinks to ensure users and search engine crawlers can navigate the site effectively.
+
+Restore missing images: Replaced or updated seven broken internal image references to improve user experience and visual integrity.
+
+Resolve page errors: Implemented permanent 301 redirects for four pages that were returning 4xx errors, guiding users and search engines to relevant, live pages or restoring the original content.
+
+Verify crawler access: Checked the robots.txt file and theme settings to confirm that no critical pages are accidentally being blocked from search engine crawlers.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">A clean link profile improves user experience and crawl efficiency. Eliminating 404s and broken images prevents users from hitting error pages and signals a well-maintained site to search engines. This avoids lost link equity and potential ranking drops – multiple broken links can negatively affect rankings by making the site appear poorly maintained. Overall, a smoother browsing experience keeps visitors on the site, supporting better SEO and conversion.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 2</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="2">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-2">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Optimize Title Tags & Meta Descriptions</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">On-Page SEO Tag Audit & Update
+
+Title Tags:
+
+Shortened excessively long title tags on 19 pages to be under the 70-character limit, preventing them from being truncated in search engine results pages (SERPs).
+
+Rewrote the shortened titles to be more compelling by including the primary keyword and a call-to-action or branding element.
+
+Meta Descriptions:
+
+Authored unique, keyword-rich meta descriptions for 37 pages that previously had duplicate or missing descriptions.
+
+Each new description now serves as a concise summary that highlights the specific page's content and its value to the user.
+
+H1 Tags:
+
+Ensured every key page has a single, descriptive H1 tag.
+
+Corrected instances of missing or duplicate H1 tags to align with the page's title tag, improving page structure and keyword focus.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Clear and unique metadata will improve click-through rates and prevent keyword cannibalization/confusion. Concise titles (<60–70 characters) won't truncate, thus appearing professional and enticing to users. Unique meta descriptions for every page give an opportunity to target relevant keywords and better differentiate pages. Proper H1 usage reinforces topic relevance. Together these on-page tweaks help search engines understand and rank each page appropriately, likely leading to modest ranking improvements and higher organic CTR.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 3</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="3">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-3">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Improve Image Alt Text & Compression</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Image Optimization & Accessibility
+
+Added Descriptive ALT Text: An audit identified 7 important images with missing ALT text. These have been updated with descriptive attributes, including product names or relevant skin concerns, to improve image SEO and provide context for visually impaired users.
+
+Image Compression & Format Optimization: Large image files have been compressed to reduce their size without a noticeable loss in quality. The use of next-gen image formats like WebP is being implemented to ensure faster loading times.
+
+Enabled Lazy Loading: Lazy loading has been enabled for all offscreen images. This means images will only load as a user scrolls down the page, significantly reducing initial page load times and improving the user experience, especially on image-heavy pages. A Shopify image optimizer app may also be used to further streamline this process.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Optimizing images boosts both SEO and UX. Descriptive alt text allows images to rank in image search and improves accessibility, which is good practice and can drive additional traffic. Image compression and lazy loading will significantly speed up page rendering, improving Core Web Vitals (like LCP). Faster pages and proper alt tags together enhance user satisfaction – users see content quicker and find what they need – which can lead to better engagement and conversion rates, as well as a potential uptick in search rankings for speed-sensitive algorithms.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 4</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="4">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-4">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Enhance Site Speed & Core Web Vitals</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Technical Performance & Core Web Vitals
+
+File Compression & Minification:
+
+Enabled Gzip or Brotli compression on the server to reduce the size of 321 previously uncompressed JavaScript and CSS files.
+
+Minified the Shopify theme's CSS and JavaScript assets, further shrinking file sizes and speeding up download times.
+
+Script & App Optimization:
+
+Removed or deferred non-essential third-party scripts and apps that were blocking page rendering, particularly to improve the mobile experience.
+
+Caching & Content Delivery:
+
+Implemented browser caching for static resources like images and stylesheets, allowing returning visitors' browsers to load the site much faster.
+
+Ensured effective use of Shopify's built-in Content Delivery Network (CDN) to deliver assets quickly to users globally.
+
+Core Web Vitals Improvements:
+
+Largest Contentful Paint (LCP): Optimized hero images by ensuring they are properly compressed and served in next-gen formats.
+
+First Input Delay (FID): Improved interactivity by deferring heavy and non-critical scripts that were delaying the page from becoming responsive.
+
+Cumulative Layout Shift (CLS): Applied CSS fixes to reserve space for elements that load late, preventing unexpected and disruptive layout shifts as the page loads.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Improving page speed and stability will positively impact both user experience and SEO rankings. Faster load times mean users are less likely to bounce, and Google rewards speed as a ranking factor. We expect to see better Core Web Vitals scores (e.g. faster LCP, quicker interactivity), which can lead to higher search visibility. Users will experience snappier page loads, especially on mobile, leading to higher conversion rates (since shoppers won't drop off due to slow pages). Overall, this foundational work sets the stage for all other optimizations to perform better.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 5 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 5</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="5">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-5">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Resolve Orphan Pages & Site Structure</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Site Architecture & Crawlability Enhancement
+
+Orphan Page Integration:
+
+An audit identified 246 orphan pages (pages present in the XML sitemap but with no internal links pointing to them).
+
+Valuable product and content pages from this list have been integrated into the site structure by adding internal links from relevant hub pages, menus, or main content, making them discoverable by both users and search engines.
+
+Outdated or unnecessary pages have been removed from the sitemap and either deleted or redirected to prevent wasting crawl budget.
+
+Site Depth Reduction:
+
+Addressed the issue of 209 key pages being more than three clicks away from the homepage, which negatively impacts SEO and user experience.
+
+The site navigation and internal linking have been restructured to "flatten" the architecture.
+
+This was achieved by adding strategic links to top products, category pages, and high-value blog posts from the main navigation, footer, and relevant category pages, ensuring all important content is accessible within a maximum of three clicks. In some cases, new intermediate landing pages were created to better group deep content.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">A more crawl-efficient site architecture will ensure search engines index all important content and users can find information faster. Linking previously orphaned pages internally prevents search bots from overlooking them and avoids wasted crawl budget on pages that were only in sitemaps. Bringing key pages closer to the homepage (click-depth wise) increases their authority and ranking potential – both users and crawlers are more likely to reach them. Over time, this structural cleanup should boost indexation rates and visibility for pages that were buried, and improve the overall SEO performance of the site.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 6 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 6</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="6">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-6">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Strengthen Internal Linking & Conversion Paths</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Enhanced Internal Linking & User Guidance
+
+Create Contextual Links from Content to Products:
+
+Blog posts and guides will be edited to include natural, contextual links that point to relevant product pages. For example, an article about hydration will link directly to a specific serum.
+
+A "Related Products" widget or banner will be considered for blog templates to automate and scale this process.
+
+Link from Product Pages to Educational Content:
+
+Product pages will be updated to include links directing users to valuable educational content. This includes adding links like "Learn how to use this product" pointing to guides or creating "Skincare Tips" sections that link to relevant blog posts.
+
+Strengthen Connections to Weakly Linked Pages:
+
+An audit identified 79 pages with only one internal link. These pages will be strengthened by adding more inbound links from other relevant areas of the site.
+
+This will be achieved by cross-linking between complementary products and ensuring every product is linked from its corresponding collection page, and from the homepage if it is a priority item.
+
+Implement Clear Calls-to-Action (CTAs):
+
+To guide users toward conversion, clear and direct CTAs will be added at the end of all blog posts. Examples include "Shop [Product Name] Now" or "Get a Personalized Regimen" to encourage the next step in the customer journey.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Better internal linking will improve SEO and user navigation flow. From an SEO perspective, more internal links to a page signal its importance and can improve its ranking; for users, it means discovering relevant products or info with ease. We expect to see increased time-on-site and more pageviews per session as readers of the blog find pathways to shop pages, and shoppers find supporting content. Importantly, funneling informational traffic to product pages (and vice versa) will directly support conversions – for example, readers of a skincare tips article are more likely to click through to a recommended product. Overall, this creates a more cohesive user journey and ensures that high-value pages aren't hidden with minimal internal links.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 7 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 7</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="7">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-7">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Optimize Product Page Content & UX</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Product Page Content & Trust Element Enhancement
+
+Expand Product Descriptions: Address the low text-to-HTML ratio on numerous pages by transforming minimal blurbs into comprehensive descriptions. This includes detailing features, listing all ingredients, and providing clear usage instructions for each product.
+
+Add FAQ Sections: Implement a frequently asked questions (FAQ) section on product pages to address common customer inquiries (e.g., "Is it safe for sensitive skin?", "How long until I see results?"). This will add valuable, keyword-rich content and proactively help shoppers.
+
+Incorporate User-Generated Content (UGC): Prominently feature customer reviews and ratings on each product page. This adds unique, authentic content that builds social proof and consumer trust.
+
+Highlight Trust Signals & Unique Selling Points (USPs): Strategically place key trust-building elements and USPs within the content or sidebars. This includes highlighting phrases like:
+
+"Developed by Dr. Lancer"
+
+"Clinically Proven Results"
+
+"30-Day Money-Back Guarantee"
+
+Free shipping offers
+
+Resolve Thin Content Issues: By implementing the above content additions, the "thin content" issue flagged on approximately 321 pages will be resolved, providing more substantial and valuable information for both search engines and users. All enhancements will be executed within Shopify's platform using the description editor or metafields as needed.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">More informative and conversion-focused product pages will serve both search engines and shoppers better. From an SEO standpoint, adding substantial unique text to product pages helps them rank for long-tail queries (e.g. a product page might start ranking for "best moisturizer for oily skin" if that phrase is in an FAQ) and avoids thin content penalties. Google tends to reward pages that comprehensively answer user queries. Users will also feel more confident purchasing: clear info and visible USPs/reviews reduce uncertainty. We anticipate higher rankings for product pages (thanks to increased relevancy and content) and improved conversion rates due to the persuasive content and trust signals. Shoppers can make informed decisions without leaving the page, keeping them in the purchase funnel.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 8 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 8</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="8">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-8">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Implement Structured Data Markup</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Structured Data (Schema.org) Implementation
+
+Implement Product Schema:
+
+Add comprehensive Product schema using JSON-LD to all product pages.
+
+This will include key attributes such as the product's name, image, price, availability, brand, and SKU.
+
+Where available, aggregateRating and review data will be included to make products eligible for rich snippets, such as star ratings and price information directly in Google's search results.
+
+Implement Article and FAQ Schema:
+
+For all blog posts, Article schema will be implemented to enhance their appearance in search results, potentially including images or other featured elements.
+
+For pages or content sections with a question-and-answer format, FAQPage schema will be used to make them eligible for inclusion in Google's "People also ask" sections.
+
+Audit and Validation Process:
+
+The existing structured data provided by the Shopify theme will be audited for accuracy and completeness.
+
+This data will be extended or corrected by editing the theme's code to inject the necessary JSON-LD scripts.
+
+All implementations will be validated using Google's Rich Results Test tool to ensure they are correctly formatted and eligible for enhanced search features.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">By providing search engines with structured data, we increase the chances of obtaining rich search results, which can improve click-through rate. For example, product pages could display star ratings and price in the Google results if markup is present, making our listing more attractive. This is a low-effort, white-hat optimization with significant benefits. We expect no direct ranking boost (schema is not a ranking factor per se), but better CTR and visibility. More users clicking through due to rich snippets means more organic traffic. In addition, structured data ensures our content is machine-readable for emerging platforms (voice search, etc.), aligning with modern SEO best practices.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 9 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 9</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="9">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-9">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Keyword Gap Analysis & Content Calendar</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Content Creation & 90-Day Calendar Plan
+
+Keyword-Driven Topic Identification: The Lancer Keywords report will be analyzed to pinpoint high-volume, relevant search terms where our current content is lacking. The focus will be on capturing new users by addressing generic skincare problems and questions.
+
+Focus on Conversion-Oriented Content: The content strategy will prioritize creating informational blog posts that address common skin concerns and ingredient questions which naturally lead to our product offerings.
+
+Example Opportunity: A key identified topic is "fungal acne treatment" (approximately 9,900 monthly searches), which presents a clear opportunity to feature our antifungal-safe products.
+
+Target Topics: A list of target topics will be compiled, including areas like hyperpigmentation, acne scars, and developing anti-aging routines.
+
+90-Day Content Calendar: A content calendar will be developed to schedule the creation and publication of these new blog posts over the next 90 days.
+
+Publishing Cadence: The goal is to publish approximately one new blog post per week, resource permitting.
+
+Product Mapping: Each content idea on the calendar will be explicitly mapped to one or more relevant Lancer products. This ensures that every article is written with a clear conversion goal, guiding the writer to include specific product recommendations.</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">A strategic content plan ensures we consistently produce SEO content that can capture non-branded organic traffic. By targeting high-volume generic queries that our potential customers are searching, we can attract new visitors who aren't necessarily looking for Lancer by name. Over time, this will shift our traffic mix to include more informational visitors at the top of the funnel. The expected outcome is a broader reach (more impressions and clicks for those topics) and an increase in organic sessions. Moreover, because each planned article will tie into a product, we set the stage for converting some of that new traffic into customers. In short, this content calendar will help us systematically grow topical authority and organic traffic in areas where the brand currently has room to grow.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 10 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 10</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="10">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-10">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">On-Page SEO Tag Audit & Update</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Shortened 19 excessively long title tags (under 70 characters)
+Revised titles to include primary keywords and compelling CTAs or brand references
+Created unique, keyword-rich meta descriptions for 37 pages with previously duplicate or missing data
+Fixed missing or duplicated H1 tags, aligning them clearly with each page's main keyword and title</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">By refining meta titles, descriptions, and H1 tags, pages will appear more accurately and attractively in search engine results. Shorter and clearer titles will prevent truncation, making our pages more appealing to potential visitors. Unique meta descriptions will provide users and search engines with precise and differentiated summaries of each page, increasing click-through rates. Correcting H1 tags ensures better keyword targeting and clearer page structure, potentially boosting our rankings for key search queries and supporting improved overall SEO performance.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 11 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 11</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="11">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-11">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Image Optimization & Anchor Text Improvement</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Add descriptive alt attributes to 7 images missing alt texts
+Replace non-descriptive anchor texts ("click here", "read more", etc.) across 391 identified links
+Ensure anchor texts clearly reflect target page topics or primary keywords</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Optimizing images and anchor texts significantly improves site accessibility and SEO performance. Alt texts ensure images are properly indexed in Google Image Search, potentially driving additional organic traffic. Correcting generic anchor texts to descriptive, keyword-rich alternatives enhances the semantic context of internal links, helping both search engines and users understand the relevance of linked content, thereby increasing the overall topical authority and improving rankings for target keywords.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 12 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 12</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="12">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-12">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Structured Data Markup Implementation</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Implement Product schema markup (JSON-LD) on product pages, including properties: name, image, price, availability, aggregate ratings
+Add Article schema markup to key blog articles (headline, author, publish date)
+Validate all structured data with Google's Rich Results Test and address validation issues if found</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Adding structured data markup enables rich search results, significantly improving visibility and user engagement on search engine results pages. Product schema markup, in particular, can enable star ratings, price information, and availability statuses directly in search snippets, enhancing the appeal and increasing click-through rates. Article schema can lead to richer presentation in Google searches, increasing organic visibility, driving qualified traffic, and ultimately contributing to higher conversion rates.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Week 13 -->
+            <div class="week-card">
+                <div class="week-header">
+                    <h2 class="week-title">Week 13</h2>
+                    <div class="week-progress">
+                        <span class="week-status" data-week="13">Not Started</span>
+                    </div>
+                </div>
+                <div class="task-container" data-task-id="week-13">
+                    <div class="task-header">
+                        <div class="task-checkbox"></div>
+                        <div class="task-title">Technical Site Health and Crawlability Cleanup</div>
+                    </div>
+                    <div class="task-details">
+                        <div class="task-description">Resolve 4 broken external links identified by audit, either removing or updating to working URLs
+Review and correct 11 pages blocked from crawling (adjust robots.txt or noindex tags appropriately)
+Address and integrate or remove 246 orphaned sitemap pages by creating internal links or removing outdated pages</div>
+                        <div class="expected-outcome">
+                            <div class="expected-outcome-title">Expected Outcome:</div>
+                            <div class="expected-outcome-text">Resolving these technical issues enhances the website's overall crawl efficiency, improves indexation rates, and avoids unnecessary depletion of crawl budget. Fixing broken links reduces bounce rates and improves user satisfaction by ensuring no visitor encounters dead-end pages. Ensuring valuable content isn't accidentally blocked from search crawlers allows all essential pages to be indexed and ranked. Integrating orphaned pages through internal linking maximizes the discoverability of content, driving improved organic traffic and overall SEO health.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="exportProgress()">📥 Export Progress</button>
+            <button class="btn btn-secondary" onclick="clearAllProgress()">🔄 Reset All</button>
+            <button class="btn btn-primary" onclick="generateReport()">📊 Generate Report</button>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 Lancer Skincare SEO Implementation Plan | Last updated: <span id="lastUpdated"></span></p>
+            <p style="margin-top: 10px; color: #999;">Progress is automatically saved in your browser</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data structure
+        let taskData = {};
+        const STORAGE_KEY = 'lancerSkincare90DaySEOPlan';
+
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                taskData = JSON.parse(saved);
+                // Apply saved states
+                Object.keys(taskData).forEach(taskId => {
+                    if (taskData[taskId]) {
+                        const element = document.querySelector(`[data-task-id="${taskId}"]`);
+                        if (element) {
+                            element.classList.add('completed');
+                        }
+                    }
+                });
+            }
+            updateStats();
+            updateLastUpdated();
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(taskData));
+            updateLastUpdated();
+        }
+
+        // Update last updated time
+        function updateLastUpdated() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleString();
+        }
+
+        // Toggle task completion
+        function toggleTask(taskId) {
+            taskData[taskId] = !taskData[taskId];
+            const element = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (taskData[taskId]) {
+                element.classList.add('completed');
+            } else {
+                element.classList.remove('completed');
+            }
+            saveProgress();
+            updateStats();
+            updateWeekStatus();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const allTasks = document.querySelectorAll('.task-container');
+            const completedTasks = document.querySelectorAll('.task-container.completed');
+            
+            const total = allTasks.length;
+            const completed = completedTasks.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('percentComplete').textContent = percentage + '%';
+            
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+        }
+
+        // Update week status
+        function updateWeekStatus() {
+            document.querySelectorAll('.week-card').forEach((weekCard, index) => {
+                const weekNum = index + 1;
+                const task = weekCard.querySelector('.task-container');
+                const statusElement = weekCard.querySelector('.week-status');
+                
+                if (task.classList.contains('completed')) {
+                    statusElement.textContent = '✅ Completed';
+                    statusElement.style.color = '#28a745';
+                } else {
+                    statusElement.textContent = 'Not Started';
+                    statusElement.style.color = '#666';
+                }
+            });
+        }
+
+        // Export progress as JSON
+        function exportProgress() {
+            const tasks = [];
+            document.querySelectorAll('.task-container').forEach(task => {
+                const taskId = task.getAttribute('data-task-id');
+                const weekNum = taskId.replace('week-', '');
+                const title = task.querySelector('.task-title').textContent;
+                const isCompleted = task.classList.contains('completed');
+                
+                tasks.push({
+                    week: parseInt(weekNum),
+                    title: title,
+                    completed: isCompleted,
+                    completedDate: isCompleted && taskData[taskId] ? new Date().toISOString() : null
+                });
+            });
+
+            const exportData = {
+                planName: 'Lancer Skincare 90-Day SEO Implementation Plan',
+                exportDate: new Date().toISOString(),
+                stats: {
+                    total: document.getElementById('totalTasks').textContent,
+                    completed: document.getElementById('completedTasks').textContent,
+                    percentage: document.getElementById('percentComplete').textContent
+                },
+                tasks: tasks
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `lancer-seo-progress-${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Clear all progress
+        function clearAllProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                taskData = {};
+                localStorage.removeItem(STORAGE_KEY);
+                document.querySelectorAll('.task-container').forEach(item => {
+                    item.classList.remove('completed');
+                });
+                updateStats();
+                updateWeekStatus();
+            }
+        }
+
+        // Generate report
+        function generateReport() {
+            const completed = document.getElementById('completedTasks').textContent;
+            const total = document.getElementById('totalTasks').textContent;
+            const percentage = document.getElementById('percentComplete').textContent;
+            
+            let report = `LANCER SKINCARE - 90 DAY SEO IMPLEMENTATION PLAN PROGRESS REPORT\n`;
+            report += `${'='.repeat(60)}\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n\n`;
+            report += `OVERALL PROGRESS: ${completed}/${total} tasks (${percentage})\n\n`;
+            
+            report += `WEEK-BY-WEEK STATUS:\n`;
+            report += `${'-'.repeat(60)}\n\n`;
+            
+            // Detailed task list
+            document.querySelectorAll('.week-card').forEach((weekCard, index) => {
+                const weekNum = index + 1;
+                const task = weekCard.querySelector('.task-container');
+                const title = task.querySelector('.task-title').textContent;
+                const isCompleted = task.classList.contains('completed');
+                const status = isCompleted ? '[✓ COMPLETED]' : '[ ] PENDING';
+                
+                report += `Week ${weekNum}: ${title}\n`;
+                report += `Status: ${status}\n`;
+                
+                if (!isCompleted) {
+                    const description = task.querySelector('.task-description').textContent;
+                    const firstLine = description.split('\n')[0];
+                    report += `Next Action: ${firstLine.substring(0, 100)}...\n`;
+                }
+                
+                report += '\n';
+            });
+            
+            report += `\n${'='.repeat(60)}\n`;
+            report += `RECOMMENDATIONS:\n`;
+            report += `${'-'.repeat(60)}\n`;
+            
+            const completedCount = parseInt(completed);
+            if (completedCount < 4) {
+                report += `• Focus on completing Weeks 1-4 (Technical Foundation)\n`;
+                report += `• These tasks form the basis for all other optimizations\n`;
+            } else if (completedCount < 8) {
+                report += `• Good progress on technical foundation\n`;
+                report += `• Prioritize site structure and content optimization next\n`;
+            } else if (completedCount < 13) {
+                report += `• Excellent progress - entering final optimization phase\n`;
+                report += `• Focus on structured data and content calendar completion\n`;
+            } else {
+                report += `• All tasks completed! Consider planning the next 90-day cycle\n`;
+                report += `• Monitor metrics and iterate on successful strategies\n`;
+            }
+            
+            // Create and download text file
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `lancer-seo-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+        }
+
+        // Add click listeners to all tasks
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved progress
+            loadProgress();
+            updateWeekStatus();
+            
+            // Add click listeners
+            document.querySelectorAll('.task-container').forEach(task => {
+                task.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    toggleTask(taskId);
+                });
+            });
+        });
+
+        // Auto-save reminder
+        window.addEventListener('beforeunload', function() {
+            saveProgress();
+        });
+    </script>
+</body>
+</html>
