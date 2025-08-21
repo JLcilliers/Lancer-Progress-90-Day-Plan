@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Live Supabase Connection</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
+</head>
+<body>
+    <h1>Testing Live Supabase Connection</h1>
+    <button onclick="testNow()">Test Connection Now</button>
+    <pre id="output"></pre>
+
+    <script>
+        const SUPABASE_URL = 'https://fihlfqufsltgkxbgonxo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpaGxmcXVmc2x0Z2t4YmdvbnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODA3NTMsImV4cCI6MjA3MTM1Njc1M30.NJP5ngR8Pl1b4l328fGbhCyTcxzzuGtrXF264YLlnxY';
+        
+        async function testNow() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing connection...\n\n';
+            
+            try {
+                // Initialize Supabase client
+                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                output.textContent += '✅ Client created\n';
+                
+                // Test 1: Read data
+                const { data: readData, error: readError } = await supabase
+                    .from('lancer_seo_tasks')
+                    .select('*')
+                    .eq('project_id', 'lancer-seo-90day');
+                
+                if (readError) {
+                    output.textContent += '❌ Read failed: ' + JSON.stringify(readError, null, 2) + '\n';
+                } else {
+                    output.textContent += '✅ Read successful! Found ' + readData.length + ' records\n';
+                    output.textContent += JSON.stringify(readData, null, 2) + '\n\n';
+                }
+                
+                // Test 2: Insert test data
+                const testId = 'test-' + Date.now();
+                const { data: insertData, error: insertError } = await supabase
+                    .from('lancer_seo_tasks')
+                    .insert([{
+                        project_id: 'lancer-seo-90day',
+                        task_id: testId,
+                        completed: false
+                    }])
+                    .select();
+                
+                if (insertError) {
+                    output.textContent += '❌ Insert failed: ' + JSON.stringify(insertError, null, 2) + '\n';
+                } else {
+                    output.textContent += '✅ Insert successful!\n';
+                    output.textContent += JSON.stringify(insertData, null, 2) + '\n\n';
+                    
+                    // Clean up test data
+                    const { error: deleteError } = await supabase
+                        .from('lancer_seo_tasks')
+                        .delete()
+                        .eq('task_id', testId);
+                    
+                    if (!deleteError) {
+                        output.textContent += '✅ Test data cleaned up\n';
+                    }
+                }
+                
+                output.textContent += '\n🎉 CONNECTION SUCCESSFUL! Your Supabase is working!\n';
+                output.textContent += '\nNow try your main app and click "Retry Connection"';
+                
+            } catch (err) {
+                output.textContent += '❌ Error: ' + err.message + '\n';
+                output.textContent += err.stack;
+            }
+        }
+    </script>
+</body>
+</html>
