@@ -907,10 +907,32 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
                 .eq('project_id', projectId)
                 .limit(1);
             
-            if (error && error.code === '42P01') {
-                // Table doesn't exist, we'll need to create it
-                console.log('Table needs to be created. Please run the SQL in Supabase.');
-                throw new Error('Table needs to be created');
+            if (error) {
+                console.log('Database error:', error);
+                if (error.code === '42P01') {
+                    // Table doesn't exist
+                    console.log('Table needs to be created. Please run the SQL in Supabase.');
+                    alert('Please create the lancer_seo_tasks table in Supabase first. Check the console for the SQL command.');
+                    console.log(`
+CREATE TABLE IF NOT EXISTS lancer_seo_tasks (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    task_id TEXT NOT NULL,
+    completed BOOLEAN DEFAULT false,
+    completed_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(project_id, task_id)
+);
+
+ALTER TABLE lancer_seo_tasks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Enable all for anon" ON lancer_seo_tasks
+    FOR ALL 
+    USING (true) 
+    WITH CHECK (true);
+                    `);
+                }
+                throw error;
             }
         }
 
