@@ -854,6 +854,7 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
             <button class="btn btn-secondary" onclick="exportProgress()">📥 Export Progress</button>
             <button class="btn btn-secondary" onclick="clearAllProgress()">🔄 Reset All</button>
             <button class="btn btn-primary" onclick="generateReport()">📊 Generate Report</button>
+            <button class="btn btn-primary" onclick="retryConnection()">🔌 Retry Connection</button>
         </div>
 
         <div class="footer">
@@ -875,8 +876,24 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
         // Initialize Supabase connection on load
         async function initializeSupabase() {
             try {
+                console.log('Initializing Supabase with:', {
+                    url: SUPABASE_URL,
+                    keyPrefix: SUPABASE_ANON_KEY.substring(0, 20) + '...'
+                });
+                
                 // Initialize Supabase client
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        persistSession: false
+                    },
+                    global: {
+                        headers: {
+                            'x-client-info': 'lancer-seo-tracker'
+                        }
+                    }
+                });
+                
+                console.log('Supabase client created');
                 
                 // Test connection and create table if needed
                 await initializeDatabase();
@@ -892,6 +909,11 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
                 
             } catch (error) {
                 console.error('Connection error:', error);
+                console.error('Full error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name
+                });
                 updateConnectionStatus('disconnected');
                 // Fall back to local storage
                 loadFromLocalStorage();
@@ -1247,6 +1269,13 @@ CREATE POLICY "Enable all for anon" ON lancer_seo_tasks
             }
         }
 
+        // Retry connection to Supabase
+        async function retryConnection() {
+            console.log('Retrying Supabase connection...');
+            updateConnectionStatus('syncing');
+            await initializeSupabase();
+        }
+        
         // Generate report
         function generateReport() {
             const completed = document.getElementById('completedTasks').textContent;
