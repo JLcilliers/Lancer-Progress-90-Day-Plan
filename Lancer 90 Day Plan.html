@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lancer Skincare - 90 Day SEO Implementation Plan</title>
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         * {
             margin: 0;
@@ -25,6 +29,29 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
+        }
+
+        /* Connection Status Banner */
+        .connection-status {
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .connection-status.connected {
+            background: #28a745;
+            color: white;
+        }
+
+        .connection-status.disconnected {
+            background: #dc3545;
+            color: white;
+        }
+
+        .connection-status.syncing {
+            background: #ffc107;
+            color: #333;
         }
 
         .header {
@@ -104,6 +131,12 @@
             border-radius: 15px;
             padding: 25px;
             border-left: 5px solid #667eea;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .week-card.updating {
+            opacity: 0.7;
         }
 
         .week-card:nth-child(4n+2) {
@@ -236,6 +269,14 @@
             opacity: 0.6;
         }
 
+        .last-update {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 0.9em;
+        }
+
         .controls {
             padding: 30px;
             background: #f8f9fa;
@@ -324,6 +365,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="connection-status" id="connectionStatus">
+            📡 Connecting to Supabase...
+        </div>
+
         <div class="header">
             <h1>🚀 Lancer Skincare - 90 Day SEO Implementation Plan</h1>
             <div class="subtitle">Technical SEO & Content Optimization Roadmap</div>
@@ -345,6 +390,10 @@
                     <div class="progress-fill" id="progressBar">0%</div>
                 </div>
             </div>
+        </div>
+
+        <div class="last-update" id="lastUpdate">
+            Last synced: Never
         </div>
 
         <div class="weeks-container">
@@ -808,22 +857,108 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
         </div>
 
         <div class="footer">
-            <p>© 2024 Lancer Skincare SEO Implementation Plan | Last updated: <span id="lastUpdated"></span></p>
-            <p style="margin-top: 10px; color: #999;">Progress is automatically saved in your browser</p>
+            <p>© 2024 Lancer Skincare SEO Implementation Plan</p>
+            <p style="margin-top: 10px; color: #999;">Real-time sync enabled with Supabase</p>
         </div>
     </div>
 
     <script>
-        // Initialize data structure
+        // Supabase configuration with embedded credentials
+        const SUPABASE_URL = 'https://fihlfqufsltgkxbgonxo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpaGxmcXVmc2x0a2d4YmdvbnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODA3NTMsImV4cCI6MjA3MTM1Njc1M30.NJP5ngR8Pl1b4l328fGbhCyTcxzzuGtrXF264YLlnxY';
+        
+        let supabase = null;
         let taskData = {};
-        const STORAGE_KEY = 'lancerSkincare90DaySEOPlan';
+        let isConnected = false;
+        let projectId = 'lancer-seo-90day'; // Unique project identifier
 
-        // Load saved progress from localStorage
-        function loadProgress() {
-            const saved = localStorage.getItem(STORAGE_KEY);
+        // Initialize Supabase connection on load
+        async function initializeSupabase() {
+            try {
+                // Initialize Supabase client
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Test connection and create table if needed
+                await initializeDatabase();
+                
+                // Load existing data
+                await loadFromSupabase();
+                
+                // Set up real-time subscription
+                subscribeToChanges();
+                
+                isConnected = true;
+                updateConnectionStatus('connected');
+                
+            } catch (error) {
+                console.error('Connection error:', error);
+                updateConnectionStatus('disconnected');
+                // Fall back to local storage
+                loadFromLocalStorage();
+            }
+        }
+
+        // Initialize database table if it doesn't exist
+        async function initializeDatabase() {
+            // Try to fetch data first to see if table exists
+            const { data, error } = await supabase
+                .from('lancer_seo_tasks')
+                .select('*')
+                .eq('project_id', projectId)
+                .limit(1);
+            
+            if (error && error.code === '42P01') {
+                // Table doesn't exist, we'll need to create it
+                console.log('Table needs to be created. Please run the SQL in Supabase.');
+                throw new Error('Table needs to be created');
+            }
+        }
+
+        // Load data from Supabase
+        async function loadFromSupabase() {
+            updateConnectionStatus('syncing');
+            
+            const { data, error } = await supabase
+                .from('lancer_seo_tasks')
+                .select('*')
+                .eq('project_id', projectId);
+            
+            if (error) {
+                console.error('Load error:', error);
+                updateConnectionStatus('disconnected');
+                return;
+            }
+            
+            // Clear and reload task data
+            taskData = {};
+            document.querySelectorAll('.task-container').forEach(task => {
+                task.classList.remove('completed');
+            });
+            
+            // Apply loaded data
+            if (data) {
+                data.forEach(record => {
+                    taskData[record.task_id] = record.completed;
+                    if (record.completed) {
+                        const element = document.querySelector(`[data-task-id="${record.task_id}"]`);
+                        if (element) {
+                            element.classList.add('completed');
+                        }
+                    }
+                });
+            }
+            
+            updateStats();
+            updateWeekStatus();
+            updateConnectionStatus('connected');
+            updateLastSync();
+        }
+
+        // Load from local storage as fallback
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('lancerSEOProgress');
             if (saved) {
                 taskData = JSON.parse(saved);
-                // Apply saved states
                 Object.keys(taskData).forEach(taskId => {
                     if (taskData[taskId]) {
                         const element = document.querySelector(`[data-task-id="${taskId}"]`);
@@ -834,33 +969,136 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
                 });
             }
             updateStats();
-            updateLastUpdated();
+            updateWeekStatus();
         }
 
-        // Save progress to localStorage
-        function saveProgress() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(taskData));
-            updateLastUpdated();
+        // Save to local storage
+        function saveToLocalStorage() {
+            localStorage.setItem('lancerSEOProgress', JSON.stringify(taskData));
         }
 
-        // Update last updated time
-        function updateLastUpdated() {
+        // Save task to Supabase
+        async function saveToSupabase(taskId, completed) {
+            if (!supabase || !isConnected) {
+                saveToLocalStorage();
+                return;
+            }
+            
+            updateConnectionStatus('syncing');
+            
+            const { data, error } = await supabase
+                .from('lancer_seo_tasks')
+                .upsert({
+                    project_id: projectId,
+                    task_id: taskId,
+                    completed: completed,
+                    completed_at: completed ? new Date().toISOString() : null,
+                    updated_at: new Date().toISOString()
+                }, {
+                    onConflict: 'project_id,task_id'
+                });
+            
+            if (error) {
+                console.error('Save error:', error);
+                updateConnectionStatus('disconnected');
+                saveToLocalStorage();
+            } else {
+                updateConnectionStatus('connected');
+                updateLastSync();
+            }
+        }
+
+        // Subscribe to real-time changes
+        function subscribeToChanges() {
+            if (!supabase) return;
+            
+            supabase
+                .channel('task-changes')
+                .on('postgres_changes', 
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'lancer_seo_tasks',
+                        filter: `project_id=eq.${projectId}`
+                    }, 
+                    (payload) => {
+                        console.log('Change received:', payload);
+                        handleRealtimeChange(payload);
+                    }
+                )
+                .subscribe();
+        }
+
+        // Handle real-time changes
+        function handleRealtimeChange(payload) {
+            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+                const record = payload.new;
+                const element = document.querySelector(`[data-task-id="${record.task_id}"]`);
+                
+                if (element) {
+                    // Add updating class for visual feedback
+                    element.parentElement.classList.add('updating');
+                    
+                    setTimeout(() => {
+                        if (record.completed) {
+                            element.classList.add('completed');
+                        } else {
+                            element.classList.remove('completed');
+                        }
+                        taskData[record.task_id] = record.completed;
+                        updateStats();
+                        updateWeekStatus();
+                        updateLastSync();
+                        element.parentElement.classList.remove('updating');
+                    }, 300);
+                }
+            }
+        }
+
+        // Update connection status display
+        function updateConnectionStatus(status) {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.className = 'connection-status ' + status;
+            
+            switch(status) {
+                case 'connected':
+                    statusElement.textContent = '✅ Connected - Real-time sync active';
+                    break;
+                case 'disconnected':
+                    statusElement.textContent = '⚠️ Offline mode - Progress saved locally';
+                    break;
+                case 'syncing':
+                    statusElement.textContent = '🔄 Syncing...';
+                    break;
+                default:
+                    statusElement.textContent = '📡 Connecting to Supabase...';
+            }
+        }
+
+        // Update last sync time
+        function updateLastSync() {
             const now = new Date();
-            document.getElementById('lastUpdated').textContent = now.toLocaleString();
+            document.getElementById('lastUpdate').textContent = 
+                `Last synced: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}`;
         }
 
         // Toggle task completion
-        function toggleTask(taskId) {
-            taskData[taskId] = !taskData[taskId];
+        async function toggleTask(taskId) {
+            const newState = !taskData[taskId];
+            taskData[taskId] = newState;
+            
             const element = document.querySelector(`[data-task-id="${taskId}"]`);
-            if (taskData[taskId]) {
+            if (newState) {
                 element.classList.add('completed');
             } else {
                 element.classList.remove('completed');
             }
-            saveProgress();
+            
             updateStats();
             updateWeekStatus();
+            
+            // Save to Supabase and local storage
+            await saveToSupabase(taskId, newState);
         }
 
         // Update statistics
@@ -888,7 +1126,7 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
                 const task = weekCard.querySelector('.task-container');
                 const statusElement = weekCard.querySelector('.week-status');
                 
-                if (task.classList.contains('completed')) {
+                if (task && task.classList.contains('completed')) {
                     statusElement.textContent = '✅ Completed';
                     statusElement.style.color = '#28a745';
                 } else {
@@ -898,7 +1136,7 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
             });
         }
 
-        // Export progress as JSON
+        // Export progress
         function exportProgress() {
             const tasks = [];
             document.querySelectorAll('.task-container').forEach(task => {
@@ -941,7 +1179,19 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
         function clearAllProgress() {
             if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
                 taskData = {};
-                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem('lancerSEOProgress');
+                
+                // Clear from Supabase if connected
+                if (supabase && isConnected) {
+                    supabase
+                        .from('lancer_seo_tasks')
+                        .delete()
+                        .eq('project_id', projectId)
+                        .then(() => {
+                            console.log('Cleared from Supabase');
+                        });
+                }
+                
                 document.querySelectorAll('.task-container').forEach(item => {
                     item.classList.remove('completed');
                 });
@@ -1012,11 +1262,10 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
             a.click();
         }
 
-        // Add click listeners to all tasks
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Load saved progress
-            loadProgress();
-            updateWeekStatus();
+            // Initialize Supabase connection
+            initializeSupabase();
             
             // Add click listeners
             document.querySelectorAll('.task-container').forEach(task => {
@@ -1029,7 +1278,9 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
 
         // Auto-save reminder
         window.addEventListener('beforeunload', function() {
-            saveProgress();
+            if (!isConnected) {
+                saveToLocalStorage();
+            }
         });
     </script>
 </body>
