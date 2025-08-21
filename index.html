@@ -900,20 +900,39 @@ Address and integrate or remove 246 orphaned sitemap pages by creating internal 
 
         // Initialize database table if it doesn't exist
         async function initializeDatabase() {
-            // Try to fetch data first to see if table exists
-            const { data, error } = await supabase
-                .from('lancer_seo_tasks')
-                .select('*')
-                .eq('project_id', projectId)
-                .limit(1);
-            
-            if (error) {
-                console.log('Database error:', error);
-                if (error.code === '42P01') {
-                    // Table doesn't exist
-                    console.log('Table needs to be created. Please run the SQL in Supabase.');
-                    alert('Please create the lancer_seo_tasks table in Supabase first. Check the console for the SQL command.');
-                    console.log(`
+            try {
+                // First test if we can connect to Supabase at all
+                const testConnection = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY
+                    }
+                });
+                
+                if (!testConnection.ok) {
+                    throw new Error('Cannot connect to Supabase. Please check your project URL.');
+                }
+                
+                // Try to fetch data first to see if table exists
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .select('*')
+                    .eq('project_id', projectId)
+                    .limit(1);
+                
+                if (error) {
+                    console.log('Database error:', error);
+                    console.log('Error details:', {
+                        message: error.message,
+                        details: error.details,
+                        hint: error.hint,
+                        code: error.code
+                    });
+                    
+                    if (error.code === '42P01' || error.message.includes('relation') || error.message.includes('does not exist')) {
+                        // Table doesn't exist
+                        console.log('Table needs to be created. Please run the SQL in Supabase.');
+                        alert('The lancer_seo_tasks table needs to be created in Supabase.\n\nPlease:\n1. Go to your Supabase dashboard\n2. Open the SQL Editor\n3. Run the SQL from supabase_setup.sql file');
+                        console.log(`
 CREATE TABLE IF NOT EXISTS lancer_seo_tasks (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id TEXT NOT NULL,
@@ -930,8 +949,14 @@ CREATE POLICY "Enable all for anon" ON lancer_seo_tasks
     FOR ALL 
     USING (true) 
     WITH CHECK (true);
-                    `);
+                        `);
+                    }
+                    throw error;
                 }
+                
+                console.log('Database connection successful!');
+            } catch (error) {
+                console.error('Failed to initialize database:', error);
                 throw error;
             }
         }
