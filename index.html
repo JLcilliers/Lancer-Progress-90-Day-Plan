@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>90-Day SEO Plan - Lancer</title>
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         :root {
             /* Spacing scale (8px baseline) */
@@ -726,7 +730,12 @@
     <!-- Header -->
     <header class="header">
         <div class="header-container">
-            <h1>90-Day SEO Plan</h1>
+            <div>
+                <h1>90-Day SEO Plan</h1>
+                <div id="connection-status" style="font-size: 14px; opacity: 0.9; margin-top: 4px;">
+                    🔄 Connecting to database...
+                </div>
+            </div>
             <div class="header-actions">
                 <button class="header-btn" onclick="copyLink()">
                     <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
@@ -837,18 +846,95 @@
     </div>
 
     <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://fihlfqufsltgkxbgonxo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpaGxmcXVmc2x0a2d4YmdvbnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODA3NTMsImV4cCI6MjA3MTM1Njc1M30.NJP5ngR8Pl1b4l328fGbhCyTcxzzuGtrXF264YLlnxY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
         // Initialize data
         let tasks = [];
         let currentFilter = 'all';
         let currentSection = 'all';
         let searchQuery = '';
+        let isConnected = false;
+        const PROJECT_ID = 'lancer-seo-90day-plan';
 
-        // Load tasks from localStorage or use default data
-        function loadTasks() {
-            const stored = localStorage.getItem('seo-90-day-tasks');
-            if (stored) {
-                tasks = JSON.parse(stored);
+        // Update connection status display
+        function updateConnectionStatus(status, message) {
+            const statusEl = document.getElementById('connection-status');
+            if (statusEl) {
+                statusEl.textContent = message;
+            }
+        }
+
+        // Initialize and load tasks
+        async function initializeApp() {
+            updateConnectionStatus('connecting', '🔄 Connecting to database...');
+            
+            try {
+                await loadTasksFromSupabase();
+                isConnected = true;
+                updateConnectionStatus('connected', '✅ Connected - Real-time sync enabled');
+                console.log('Connected to Supabase');
+            } catch (error) {
+                console.error('Failed to connect to Supabase:', error);
+                updateConnectionStatus('error', '⚠️ Database connection failed - using local mode');
+                loadDefaultTasks();
+            }
+        }
+
+        // Load tasks from Supabase
+        async function loadTasksFromSupabase() {
+            const { data, error } = await supabase
+                .from('lancer_seo_tasks')
+                .select('*')
+                .eq('project_id', PROJECT_ID)
+                .order('week');
+            
+            if (error) {
+                throw error;
+            }
+            
+            if (data && data.length > 0) {
+                // Convert Supabase data to task format
+                const taskMap = {};
+                data.forEach(row => {
+                    taskMap[row.week] = {
+                        id: `task-${row.week}`,
+                        week: row.week,
+                        section: row.week <= 4 ? 'foundation' : row.week <= 8 ? 'acceleration' : 'optimization',
+                        title: row.task_title,
+                        details: row.detailed_fix,
+                        outcome: row.expected_outcome,
+                        status: row.completed ? 'done' : 'todo',
+                        owner: 'AB',
+                        targetDate: getTargetDate(row.week),
+                        lastUpdated: row.updated_at,
+                        notes: {
+                            links: row.notes ? JSON.parse(row.notes).links || [] : [],
+                            decisions: row.notes ? JSON.parse(row.notes).decisions || [] : [],
+                            evidence: row.notes ? JSON.parse(row.notes).evidence || [] : []
+                        }
+                    };
+                });
+                
+                // If we have stored data, use it, otherwise load defaults and merge
+                if (Object.keys(taskMap).length > 0) {
+                    tasks = Object.values(taskMap);
+                } else {
+                    loadDefaultTasks();
+                    await saveTasksToSupabase();
+                }
             } else {
+                loadDefaultTasks();
+                await saveTasksToSupabase();
+            }
+        }
+
+        // Load default tasks if no data in Supabase
+        function loadDefaultTasks() {
                 // Default tasks from CSV
                 tasks = [
                     {
@@ -1073,14 +1159,77 @@
                         }
                     }
                 ];
-                saveTasks();
+            }
+
+        // Helper function to get target dates
+        function getTargetDate(week) {
+            const baseDate = new Date('2025-01-08'); // Week 1 start date
+            baseDate.setDate(baseDate.getDate() + (week - 1) * 7);
+            return baseDate.toISOString().split('T')[0];
+        }
+
+        // Save tasks to Supabase
+        async function saveTasksToSupabase() {
+            if (!isConnected) return;
+            
+            try {
+                // Convert tasks to Supabase format
+                const supabaseData = tasks.map(task => ({
+                    project_id: PROJECT_ID,
+                    week: task.week,
+                    task_title: task.title,
+                    detailed_fix: task.details,
+                    expected_outcome: task.outcome,
+                    completed: task.status === 'done',
+                    notes: JSON.stringify(task.notes),
+                    updated_at: new Date().toISOString()
+                }));
+
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .upsert(supabaseData, {
+                        onConflict: 'project_id,week'
+                    });
+
+                if (error) {
+                    throw error;
+                }
+                
+                console.log('Tasks saved to Supabase');
+            } catch (error) {
+                console.error('Error saving to Supabase:', error);
             }
         }
 
-        // Save tasks to localStorage
-        function saveTasks() {
-            localStorage.setItem('seo-90-day-tasks', JSON.stringify(tasks));
-            updateProgress();
+        // Save individual task status
+        async function saveTaskStatus(taskId, status) {
+            if (!isConnected) return;
+            
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .upsert({
+                        project_id: PROJECT_ID,
+                        week: task.week,
+                        task_title: task.title,
+                        detailed_fix: task.details,
+                        expected_outcome: task.outcome,
+                        completed: status === 'done',
+                        notes: JSON.stringify(task.notes),
+                        updated_at: new Date().toISOString()
+                    }, {
+                        onConflict: 'project_id,week'
+                    });
+
+                if (error) {
+                    throw error;
+                }
+            } catch (error) {
+                console.error('Error saving task status:', error);
+            }
         }
 
         // Render sections and tasks
@@ -1300,25 +1449,27 @@
         }
 
         // Toggle task completion
-        function toggleTaskComplete(taskId, checked) {
+        async function toggleTaskComplete(taskId, checked) {
             const task = tasks.find(t => t.id === taskId);
             if (task) {
                 task.status = checked ? 'done' : 'todo';
                 task.lastUpdated = new Date().toISOString();
-                saveTasks();
+                await saveTaskStatus(taskId, task.status);
+                updateProgress();
                 renderSections();
             }
         }
 
         // Cycle through status states
-        function cycleStatus(taskId) {
+        async function cycleStatus(taskId) {
             const task = tasks.find(t => t.id === taskId);
             if (task) {
                 const states = ['todo', 'progress', 'blocked', 'done'];
                 const currentIndex = states.indexOf(task.status);
                 task.status = states[(currentIndex + 1) % states.length];
                 task.lastUpdated = new Date().toISOString();
-                saveTasks();
+                await saveTaskStatus(taskId, task.status);
+                updateProgress();
                 renderSections();
             }
         }
@@ -1358,7 +1509,7 @@
         }
 
         // Add link
-        function addLink(taskId) {
+        async function addLink(taskId) {
             const url = prompt('Enter link URL:');
             if (url) {
                 const title = prompt('Enter link title:') || url;
@@ -1366,47 +1517,47 @@
                 if (task) {
                     task.notes.links.push({ url, title });
                     task.lastUpdated = new Date().toISOString();
-                    saveTasks();
+                    await saveTaskStatus(taskId, task.status);
                     renderSections();
                 }
             }
         }
 
         // Add decision
-        function addDecision(taskId) {
+        async function addDecision(taskId) {
             const decision = prompt('Enter decision:');
             if (decision) {
                 const task = tasks.find(t => t.id === taskId);
                 if (task) {
                     task.notes.decisions.push(decision);
                     task.lastUpdated = new Date().toISOString();
-                    saveTasks();
+                    await saveTaskStatus(taskId, task.status);
                     renderSections();
                 }
             }
         }
 
         // Add evidence
-        function addEvidence(taskId) {
+        async function addEvidence(taskId) {
             const evidence = prompt('Enter evidence:');
             if (evidence) {
                 const task = tasks.find(t => t.id === taskId);
                 if (task) {
                     task.notes.evidence.push(evidence);
                     task.lastUpdated = new Date().toISOString();
-                    saveTasks();
+                    await saveTaskStatus(taskId, task.status);
                     renderSections();
                 }
             }
         }
 
         // Save blocker
-        function saveBlocker(taskId, value) {
+        async function saveBlocker(taskId, value) {
             const task = tasks.find(t => t.id === taskId);
             if (task) {
                 task.blocker = value;
                 task.lastUpdated = new Date().toISOString();
-                saveTasks();
+                await saveTaskStatus(taskId, task.status);
             }
         }
 
@@ -1520,28 +1671,51 @@
         }
 
         // Reset plan
-        function resetPlan() {
+        async function resetPlan() {
             if (confirm('Are you sure you want to reset all tasks? This cannot be undone.')) {
-                localStorage.removeItem('seo-90-day-tasks');
-                localStorage.removeItem('collapsed-sections');
-                loadTasks();
+                if (isConnected) {
+                    try {
+                        const { error } = await supabase
+                            .from('lancer_seo_tasks')
+                            .delete()
+                            .eq('project_id', PROJECT_ID);
+                        
+                        if (error) throw error;
+                    } catch (error) {
+                        console.error('Error resetting tasks:', error);
+                    }
+                }
+                
+                loadDefaultTasks();
+                await saveTasksToSupabase();
                 renderSections();
             }
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadTasks();
-            renderSections();
-            
-            // Restore collapsed sections
-            const collapsed = JSON.parse(localStorage.getItem('collapsed-sections') || '[]');
-            collapsed.forEach(sectionId => {
-                const section = document.getElementById(sectionId);
-                if (section) {
-                    section.classList.add('collapsed');
-                }
-            });
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initializeApp();
+                renderSections();
+                updateProgress();
+                
+                // Restore collapsed sections
+                const collapsed = JSON.parse(localStorage.getItem('collapsed-sections') || '[]');
+                collapsed.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.classList.add('collapsed');
+                    }
+                });
+                
+                console.log('App initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize app:', error);
+                // Fallback to default tasks
+                loadDefaultTasks();
+                renderSections();
+                updateProgress();
+            }
         });
     </script>
 </body>

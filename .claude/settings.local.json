@@ -9,7 +9,11 @@
       "Bash(git checkout:*)",
       "Bash(git mv:*)",
       "Bash(git merge:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(curl:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)",
+      "Bash(git branch:*)"
     ],
     "deny": [],
     "ask": []
