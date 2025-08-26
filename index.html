@@ -3,12 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lancer Skincare - 90 Day SEO Implementation Plan</title>
-    
-    <!-- Supabase Client - Using specific version for stability -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3"></script>
-    
+    <title>90-Day SEO Plan - Lancer</title>
     <style>
+        :root {
+            /* Spacing scale (8px baseline) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 24px;
+            --space-6: 32px;
+            --space-7: 48px;
+
+            /* Colors */
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --border: #E5E7EB;
+            --border-hover: #CBD5E1;
+            --text: #0F172A;
+            --text-secondary: #334155;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --brand: #F97316;
+            --brand-gradient: linear-gradient(135deg, #F97316, #FB923C);
+            --success: #16A34A;
+            --info: #2563EB;
+            --warning: #DC2626;
+            
+            /* Status pill colors */
+            --pill-todo-fg: #334155;
+            --pill-todo-bg: #F1F5F9;
+            --pill-progress-fg: #1E40AF;
+            --pill-progress-bg: #EFF6FF;
+            --pill-blocked-fg: #B91C1C;
+            --pill-blocked-bg: #FEF2F2;
+            --pill-done-fg: #166534;
+            --pill-done-bg: #ECFDF5;
+
+            /* Layout */
+            --radius: 12px;
+            --radius-sm: 6px;
+            --radius-full: 999px;
+            --shadow-1: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-2: 0 4px 6px rgba(0,0,0,0.05);
+            --max-width: 1280px;
+            
+            /* Typography */
+            --font-base: 16px;
+            --line-height: 1.5;
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0F172A;
+                --card: #1E293B;
+                --border: #334155;
+                --border-hover: #475569;
+                --text: #F1F5F9;
+                --text-secondary: #CBD5E1;
+                --text-muted: #94A3B8;
+                --text-light: #64748B;
+                --shadow-1: 0 1px 2px rgba(0,0,0,0.2);
+                --shadow-2: 0 4px 6px rgba(0,0,0,0.3);
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,1364 +77,1471 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: var(--font-base);
+            line-height: var(--line-height);
+            color: var(--text);
+            background: var(--bg);
             min-height: 100vh;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+        /* Focus styles */
+        *:focus-visible {
+            outline: 3px solid var(--brand);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
         }
 
-        /* Connection Status Banner */
-        .connection-status {
-            padding: 10px;
-            text-align: center;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .connection-status.connected {
-            background: #28a745;
+        /* Skip link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--brand);
             color: white;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            z-index: 1000;
         }
 
-        .connection-status.disconnected {
-            background: #dc3545;
-            color: white;
+        .skip-link:focus {
+            top: var(--space-2);
         }
 
-        .connection-status.syncing {
-            background: #ffc107;
-            color: #333;
-        }
-
+        /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--brand-gradient);
             color: white;
-            padding: 40px;
-            text-align: center;
+            padding: var(--space-4) var(--space-5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-2);
+        }
+
+        .header-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-4);
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
         }
 
-        .header .subtitle {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .progress-overview {
-            background: #f8f9fa;
-            padding: 30px;
+        .header-actions {
             display: flex;
-            justify-content: space-around;
+            gap: var(--space-3);
             flex-wrap: wrap;
-            gap: 20px;
         }
 
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            min-width: 200px;
+        .header-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
         }
 
-        .stat-card .number {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #667eea;
+        .header-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
         }
 
-        .stat-card .label {
-            color: #666;
-            margin-top: 5px;
+        /* Layout */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Navigation rail */
+        .nav-rail {
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: var(--space-5);
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .nav-rail h2 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: var(--space-4);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) var(--space-3);
+            margin-bottom: var(--space-2);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-item:hover {
+            background: var(--bg);
+        }
+
+        .nav-item.active {
+            background: var(--brand);
+            color: white;
+        }
+
+        .nav-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-progress {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 12px;
+        }
+
+        .progress-ring {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .progress-ring-bg {
+            stroke: var(--border);
+        }
+
+        .progress-ring-fill {
+            stroke: var(--success);
+            stroke-dasharray: 62.83;
+            stroke-dashoffset: 62.83;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 0.3s;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: var(--space-5);
+            background: var(--bg);
+        }
+
+        /* Utility bar */
+        .utility-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .progress-module {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
         }
 
         .progress-bar {
-            width: 100%;
-            height: 30px;
-            background: #e9ecef;
-            border-radius: 15px;
+            width: 200px;
+            height: 8px;
+            background: var(--border);
+            border-radius: var(--radius-full);
             overflow: hidden;
-            margin-top: 10px;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 15px;
-            transition: width 0.3s ease;
+            background: var(--success);
+            border-radius: var(--radius-full);
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .filter-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .weeks-container {
-            padding: 30px;
-        }
-
-        .week-card {
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            border-left: 5px solid #667eea;
-            opacity: 1;
-            transition: opacity 0.3s;
-        }
-
-        .week-card.updating {
-            opacity: 0.7;
-        }
-
-        .week-card:nth-child(4n+2) {
-            border-left-color: #764ba2;
-        }
-
-        .week-card:nth-child(4n+3) {
-            border-left-color: #f093fb;
-        }
-
-        .week-card:nth-child(4n+4) {
-            border-left-color: #a8edea;
-        }
-
-        .week-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .week-title {
-            font-size: 1.6em;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .week-progress {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .task-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: all 0.3s;
-            user-select: none;
-        }
-
-        .task-container:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .task-header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-
-        .task-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid #667eea;
-            border-radius: 6px;
-            margin-right: 15px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            margin-top: 2px;
-        }
-
-        .task-container.completed .task-checkbox {
-            background: #667eea;
-            border-color: #667eea;
-        }
-
-        .task-container.completed .task-checkbox::after {
-            content: '✓';
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .task-title {
-            font-size: 1.2em;
-            color: #333;
-            font-weight: 600;
-            transition: all 0.3s;
-            flex: 1;
-        }
-
-        .task-container.completed .task-title {
-            text-decoration: line-through;
-            opacity: 0.6;
-        }
-
-        .task-details {
-            padding-left: 39px;
-        }
-
-        .task-description {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            white-space: pre-wrap;
-        }
-
-        .task-container.completed .task-description {
-            opacity: 0.5;
-        }
-
-        .expected-outcome {
-            background: #f1f3f5;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #667eea;
-        }
-
-        .expected-outcome-title {
-            font-weight: 600;
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        .expected-outcome-text {
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .task-container.completed .expected-outcome {
-            opacity: 0.6;
-        }
-
-        .last-update {
-            text-align: center;
-            padding: 10px;
-            background: #f8f9fa;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .controls {
-            padding: 30px;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+            gap: var(--space-3);
             flex-wrap: wrap;
         }
 
-        .btn {
-            padding: 12px 30px;
+        /* Status filters */
+        .status-filters {
+            display: flex;
+            gap: var(--space-2);
+            background: var(--card);
+            padding: var(--space-1);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .status-filter {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            background: transparent;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            min-height: 32px;
+        }
+
+        .status-filter:hover {
+            background: var(--bg);
+        }
+
+        .status-filter.active {
+            background: var(--brand);
+            color: white;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--space-3);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-input {
+            padding: var(--space-2) var(--space-3) var(--space-2) 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--card);
+            color: var(--text);
+            width: 200px;
+            height: 40px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--brand);
+            width: 280px;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: var(--space-7);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-5);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 20px;
             font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+        .section-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .collapse-icon {
+            transition: transform 0.2s;
         }
 
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+        .section.collapsed .collapse-icon {
+            transform: rotate(-90deg);
         }
 
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+        .section.collapsed .section-content {
+            display: none;
         }
 
-        .footer {
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            gap: var(--space-5);
+        }
+
+        /* Task card */
+        .task-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-5);
+            box-shadow: var(--shadow-1);
+            transition: all 0.2s;
+        }
+
+        .task-card:hover {
+            box-shadow: var(--shadow-2);
+            border-color: var(--border-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            flex: 1;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--brand);
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        .task-week {
+            font-weight: 600;
+            color: var(--brand);
+        }
+
+        /* Status pill */
+        .status-pill {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            min-width: 80px;
             text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9em;
         }
 
-        @media (max-width: 768px) {
+        .status-pill.todo {
+            background: var(--pill-todo-bg);
+            color: var(--pill-todo-fg);
+        }
+
+        .status-pill.progress {
+            background: var(--pill-progress-bg);
+            color: var(--pill-progress-fg);
+        }
+
+        .status-pill.blocked {
+            background: var(--pill-blocked-bg);
+            color: var(--pill-blocked-fg);
+        }
+
+        .status-pill.done {
+            background: var(--pill-done-bg);
+            color: var(--pill-done-fg);
+        }
+
+        /* Card meta */
+        .card-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            padding: var(--space-3) 0;
+            margin-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.5;
+        }
+
+        /* Expandable details */
+        .details-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--brand);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            padding: var(--space-2) 0;
+            margin-bottom: var(--space-3);
+        }
+
+        .details-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .details-content {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .details-content.visible {
+            display: block;
+        }
+
+        /* Notes section */
+        .notes-section {
+            display: grid;
+            gap: var(--space-3);
+        }
+
+        .notes-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .notes-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .notes-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .note-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .note-chip a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .note-chip a:hover {
+            text-decoration: underline;
+        }
+
+        .add-note-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-note-btn:hover {
+            border-color: var(--brand);
+            color: var(--brand);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-7);
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: var(--space-3);
+        }
+
+        /* Responsive */
+        @media (max-width: 960px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-rail {
+                display: none;
+            }
+
             .header h1 {
-                font-size: 1.8em;
+                font-size: 20px;
             }
-            
-            .week-header {
+
+            .header-actions {
+                display: none;
+            }
+
+            .card-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .utility-bar {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+                align-items: stretch;
             }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .btn {
+
+            .progress-bar {
                 width: 100%;
             }
 
-            .task-description {
-                font-size: 0.9em;
+            .filter-controls {
+                width: 100%;
+            }
+
+            .status-filters {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .search-input:focus {
+                width: 100%;
             }
         }
 
+        /* Print styles */
         @media print {
-            body {
-                background: white;
+            .header,
+            .nav-rail,
+            .utility-bar,
+            .details-toggle,
+            .add-note-btn {
+                display: none !important;
             }
-            
-            .controls {
-                display: none;
+
+            .app-layout {
+                grid-template-columns: 1fr;
             }
-            
-            .task-container {
+
+            .section {
                 page-break-inside: avoid;
             }
+
+            .task-card {
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+                margin-bottom: 16px;
+            }
+
+            .details-content {
+                display: none !important;
+            }
+        }
+
+        /* Icons (inline SVG) */
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="connection-status" id="connectionStatus" onclick="showConnectionHelp()" style="cursor: pointer;">
-            📡 Connecting to Supabase...
-        </div>
-
-        <div class="header">
-            <h1>🚀 Lancer Skincare - 90 Day SEO Implementation Plan</h1>
-            <div class="subtitle">Technical SEO & Content Optimization Roadmap</div>
-        </div>
-
-        <div class="progress-overview">
-            <div class="stat-card">
-                <div class="number" id="totalTasks">13</div>
-                <div class="label">Total Tasks</div>
-            </div>
-            <div class="stat-card">
-                <div class="number" id="completedTasks">0</div>
-                <div class="label">Completed</div>
-            </div>
-            <div class="stat-card">
-                <div class="number" id="percentComplete">0%</div>
-                <div class="label">Progress</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressBar">0%</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="last-update" id="lastUpdate">
-            Last synced: Never
-        </div>
-
-        <div class="weeks-container">
-            <!-- Week 1 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 1</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="1">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-1">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Fix Broken Links & 404 Errors</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Repair broken internal links: Fixed nine broken internal hyperlinks to ensure users and search engine crawlers can navigate the site effectively.
-
-Restore missing images: Replaced or updated seven broken internal image references to improve user experience and visual integrity.
-
-Resolve page errors: Implemented permanent 301 redirects for four pages that were returning 4xx errors, guiding users and search engines to relevant, live pages or restoring the original content.
-
-Verify crawler access: Checked the robots.txt file and theme settings to confirm that no critical pages are accidentally being blocked from search engine crawlers.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">A clean link profile improves user experience and crawl efficiency. Eliminating 404s and broken images prevents users from hitting error pages and signals a well-maintained site to search engines. This avoids lost link equity and potential ranking drops – multiple broken links can negatively affect rankings by making the site appear poorly maintained. Overall, a smoother browsing experience keeps visitors on the site, supporting better SEO and conversion.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 2 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 2</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="2">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-2">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Optimize Title Tags & Meta Descriptions</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">On-Page SEO Tag Audit & Update
-
-Title Tags:
-
-Shortened excessively long title tags on 19 pages to be under the 70-character limit, preventing them from being truncated in search engine results pages (SERPs).
-
-Rewrote the shortened titles to be more compelling by including the primary keyword and a call-to-action or branding element.
-
-Meta Descriptions:
-
-Authored unique, keyword-rich meta descriptions for 37 pages that previously had duplicate or missing descriptions.
-
-Each new description now serves as a concise summary that highlights the specific page's content and its value to the user.
-
-H1 Tags:
-
-Ensured every key page has a single, descriptive H1 tag.
-
-Corrected instances of missing or duplicate H1 tags to align with the page's title tag, improving page structure and keyword focus.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Clear and unique metadata will improve click-through rates and prevent keyword cannibalization/confusion. Concise titles (<60–70 characters) won't truncate, thus appearing professional and enticing to users. Unique meta descriptions for every page give an opportunity to target relevant keywords and better differentiate pages. Proper H1 usage reinforces topic relevance. Together these on-page tweaks help search engines understand and rank each page appropriately, likely leading to modest ranking improvements and higher organic CTR.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 3 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 3</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="3">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-3">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Improve Image Alt Text & Compression</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Image Optimization & Accessibility
-
-Added Descriptive ALT Text: An audit identified 7 important images with missing ALT text. These have been updated with descriptive attributes, including product names or relevant skin concerns, to improve image SEO and provide context for visually impaired users.
-
-Image Compression & Format Optimization: Large image files have been compressed to reduce their size without a noticeable loss in quality. The use of next-gen image formats like WebP is being implemented to ensure faster loading times.
-
-Enabled Lazy Loading: Lazy loading has been enabled for all offscreen images. This means images will only load as a user scrolls down the page, significantly reducing initial page load times and improving the user experience, especially on image-heavy pages. A Shopify image optimizer app may also be used to further streamline this process.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Optimizing images boosts both SEO and UX. Descriptive alt text allows images to rank in image search and improves accessibility, which is good practice and can drive additional traffic. Image compression and lazy loading will significantly speed up page rendering, improving Core Web Vitals (like LCP). Faster pages and proper alt tags together enhance user satisfaction – users see content quicker and find what they need – which can lead to better engagement and conversion rates, as well as a potential uptick in search rankings for speed-sensitive algorithms.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 4 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 4</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="4">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-4">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Enhance Site Speed & Core Web Vitals</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Technical Performance & Core Web Vitals
-
-File Compression & Minification:
-
-Enabled Gzip or Brotli compression on the server to reduce the size of 321 previously uncompressed JavaScript and CSS files.
-
-Minified the Shopify theme's CSS and JavaScript assets, further shrinking file sizes and speeding up download times.
-
-Script & App Optimization:
-
-Removed or deferred non-essential third-party scripts and apps that were blocking page rendering, particularly to improve the mobile experience.
-
-Caching & Content Delivery:
-
-Implemented browser caching for static resources like images and stylesheets, allowing returning visitors' browsers to load the site much faster.
-
-Ensured effective use of Shopify's built-in Content Delivery Network (CDN) to deliver assets quickly to users globally.
-
-Core Web Vitals Improvements:
-
-Largest Contentful Paint (LCP): Optimized hero images by ensuring they are properly compressed and served in next-gen formats.
-
-First Input Delay (FID): Improved interactivity by deferring heavy and non-critical scripts that were delaying the page from becoming responsive.
-
-Cumulative Layout Shift (CLS): Applied CSS fixes to reserve space for elements that load late, preventing unexpected and disruptive layout shifts as the page loads.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Improving page speed and stability will positively impact both user experience and SEO rankings. Faster load times mean users are less likely to bounce, and Google rewards speed as a ranking factor. We expect to see better Core Web Vitals scores (e.g. faster LCP, quicker interactivity), which can lead to higher search visibility. Users will experience snappier page loads, especially on mobile, leading to higher conversion rates (since shoppers won't drop off due to slow pages). Overall, this foundational work sets the stage for all other optimizations to perform better.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 5 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 5</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="5">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-5">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Resolve Orphan Pages & Site Structure</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Site Architecture & Crawlability Enhancement
-
-Orphan Page Integration:
-
-An audit identified 246 orphan pages (pages present in the XML sitemap but with no internal links pointing to them).
-
-Valuable product and content pages from this list have been integrated into the site structure by adding internal links from relevant hub pages, menus, or main content, making them discoverable by both users and search engines.
-
-Outdated or unnecessary pages have been removed from the sitemap and either deleted or redirected to prevent wasting crawl budget.
-
-Site Depth Reduction:
-
-Addressed the issue of 209 key pages being more than three clicks away from the homepage, which negatively impacts SEO and user experience.
-
-The site navigation and internal linking have been restructured to "flatten" the architecture.
-
-This was achieved by adding strategic links to top products, category pages, and high-value blog posts from the main navigation, footer, and relevant category pages, ensuring all important content is accessible within a maximum of three clicks. In some cases, new intermediate landing pages were created to better group deep content.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">A more crawl-efficient site architecture will ensure search engines index all important content and users can find information faster. Linking previously orphaned pages internally prevents search bots from overlooking them and avoids wasted crawl budget on pages that were only in sitemaps. Bringing key pages closer to the homepage (click-depth wise) increases their authority and ranking potential – both users and crawlers are more likely to reach them. Over time, this structural cleanup should boost indexation rates and visibility for pages that were buried, and improve the overall SEO performance of the site.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 6 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 6</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="6">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-6">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Strengthen Internal Linking & Conversion Paths</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Enhanced Internal Linking & User Guidance
-
-Create Contextual Links from Content to Products:
-
-Blog posts and guides will be edited to include natural, contextual links that point to relevant product pages. For example, an article about hydration will link directly to a specific serum.
-
-A "Related Products" widget or banner will be considered for blog templates to automate and scale this process.
-
-Link from Product Pages to Educational Content:
-
-Product pages will be updated to include links directing users to valuable educational content. This includes adding links like "Learn how to use this product" pointing to guides or creating "Skincare Tips" sections that link to relevant blog posts.
-
-Strengthen Connections to Weakly Linked Pages:
-
-An audit identified 79 pages with only one internal link. These pages will be strengthened by adding more inbound links from other relevant areas of the site.
-
-This will be achieved by cross-linking between complementary products and ensuring every product is linked from its corresponding collection page, and from the homepage if it is a priority item.
-
-Implement Clear Calls-to-Action (CTAs):
-
-To guide users toward conversion, clear and direct CTAs will be added at the end of all blog posts. Examples include "Shop [Product Name] Now" or "Get a Personalized Regimen" to encourage the next step in the customer journey.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Better internal linking will improve SEO and user navigation flow. From an SEO perspective, more internal links to a page signal its importance and can improve its ranking; for users, it means discovering relevant products or info with ease. We expect to see increased time-on-site and more pageviews per session as readers of the blog find pathways to shop pages, and shoppers find supporting content. Importantly, funneling informational traffic to product pages (and vice versa) will directly support conversions – for example, readers of a skincare tips article are more likely to click through to a recommended product. Overall, this creates a more cohesive user journey and ensures that high-value pages aren't hidden with minimal internal links.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 7 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 7</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="7">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-7">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Optimize Product Page Content & UX</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Product Page Content & Trust Element Enhancement
-
-Expand Product Descriptions: Address the low text-to-HTML ratio on numerous pages by transforming minimal blurbs into comprehensive descriptions. This includes detailing features, listing all ingredients, and providing clear usage instructions for each product.
-
-Add FAQ Sections: Implement a frequently asked questions (FAQ) section on product pages to address common customer inquiries (e.g., "Is it safe for sensitive skin?", "How long until I see results?"). This will add valuable, keyword-rich content and proactively help shoppers.
-
-Incorporate User-Generated Content (UGC): Prominently feature customer reviews and ratings on each product page. This adds unique, authentic content that builds social proof and consumer trust.
-
-Highlight Trust Signals & Unique Selling Points (USPs): Strategically place key trust-building elements and USPs within the content or sidebars. This includes highlighting phrases like:
-
-"Developed by Dr. Lancer"
-
-"Clinically Proven Results"
-
-"30-Day Money-Back Guarantee"
-
-Free shipping offers
-
-Resolve Thin Content Issues: By implementing the above content additions, the "thin content" issue flagged on approximately 321 pages will be resolved, providing more substantial and valuable information for both search engines and users. All enhancements will be executed within Shopify's platform using the description editor or metafields as needed.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">More informative and conversion-focused product pages will serve both search engines and shoppers better. From an SEO standpoint, adding substantial unique text to product pages helps them rank for long-tail queries (e.g. a product page might start ranking for "best moisturizer for oily skin" if that phrase is in an FAQ) and avoids thin content penalties. Google tends to reward pages that comprehensively answer user queries. Users will also feel more confident purchasing: clear info and visible USPs/reviews reduce uncertainty. We anticipate higher rankings for product pages (thanks to increased relevancy and content) and improved conversion rates due to the persuasive content and trust signals. Shoppers can make informed decisions without leaving the page, keeping them in the purchase funnel.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 8 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 8</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="8">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-8">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Implement Structured Data Markup</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Structured Data (Schema.org) Implementation
-
-Implement Product Schema:
-
-Add comprehensive Product schema using JSON-LD to all product pages.
-
-This will include key attributes such as the product's name, image, price, availability, brand, and SKU.
-
-Where available, aggregateRating and review data will be included to make products eligible for rich snippets, such as star ratings and price information directly in Google's search results.
-
-Implement Article and FAQ Schema:
-
-For all blog posts, Article schema will be implemented to enhance their appearance in search results, potentially including images or other featured elements.
-
-For pages or content sections with a question-and-answer format, FAQPage schema will be used to make them eligible for inclusion in Google's "People also ask" sections.
-
-Audit and Validation Process:
-
-The existing structured data provided by the Shopify theme will be audited for accuracy and completeness.
-
-This data will be extended or corrected by editing the theme's code to inject the necessary JSON-LD scripts.
-
-All implementations will be validated using Google's Rich Results Test tool to ensure they are correctly formatted and eligible for enhanced search features.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">By providing search engines with structured data, we increase the chances of obtaining rich search results, which can improve click-through rate. For example, product pages could display star ratings and price in the Google results if markup is present, making our listing more attractive. This is a low-effort, white-hat optimization with significant benefits. We expect no direct ranking boost (schema is not a ranking factor per se), but better CTR and visibility. More users clicking through due to rich snippets means more organic traffic. In addition, structured data ensures our content is machine-readable for emerging platforms (voice search, etc.), aligning with modern SEO best practices.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 9 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 9</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="9">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-9">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Keyword Gap Analysis & Content Calendar</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Content Creation & 90-Day Calendar Plan
-
-Keyword-Driven Topic Identification: The Lancer Keywords report will be analyzed to pinpoint high-volume, relevant search terms where our current content is lacking. The focus will be on capturing new users by addressing generic skincare problems and questions.
-
-Focus on Conversion-Oriented Content: The content strategy will prioritize creating informational blog posts that address common skin concerns and ingredient questions which naturally lead to our product offerings.
-
-Example Opportunity: A key identified topic is "fungal acne treatment" (approximately 9,900 monthly searches), which presents a clear opportunity to feature our antifungal-safe products.
-
-Target Topics: A list of target topics will be compiled, including areas like hyperpigmentation, acne scars, and developing anti-aging routines.
-
-90-Day Content Calendar: A content calendar will be developed to schedule the creation and publication of these new blog posts over the next 90 days.
-
-Publishing Cadence: The goal is to publish approximately one new blog post per week, resource permitting.
-
-Product Mapping: Each content idea on the calendar will be explicitly mapped to one or more relevant Lancer products. This ensures that every article is written with a clear conversion goal, guiding the writer to include specific product recommendations.</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">A strategic content plan ensures we consistently produce SEO content that can capture non-branded organic traffic. By targeting high-volume generic queries that our potential customers are searching, we can attract new visitors who aren't necessarily looking for Lancer by name. Over time, this will shift our traffic mix to include more informational visitors at the top of the funnel. The expected outcome is a broader reach (more impressions and clicks for those topics) and an increase in organic sessions. Moreover, because each planned article will tie into a product, we set the stage for converting some of that new traffic into customers. In short, this content calendar will help us systematically grow topical authority and organic traffic in areas where the brand currently has room to grow.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 10 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 10</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="10">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-10">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">On-Page SEO Tag Audit & Update</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Shortened 19 excessively long title tags (under 70 characters)
-Revised titles to include primary keywords and compelling CTAs or brand references
-Created unique, keyword-rich meta descriptions for 37 pages with previously duplicate or missing data
-Fixed missing or duplicated H1 tags, aligning them clearly with each page's main keyword and title</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">By refining meta titles, descriptions, and H1 tags, pages will appear more accurately and attractively in search engine results. Shorter and clearer titles will prevent truncation, making our pages more appealing to potential visitors. Unique meta descriptions will provide users and search engines with precise and differentiated summaries of each page, increasing click-through rates. Correcting H1 tags ensures better keyword targeting and clearer page structure, potentially boosting our rankings for key search queries and supporting improved overall SEO performance.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 11 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 11</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="11">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-11">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Image Optimization & Anchor Text Improvement</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Add descriptive alt attributes to 7 images missing alt texts
-Replace non-descriptive anchor texts ("click here", "read more", etc.) across 391 identified links
-Ensure anchor texts clearly reflect target page topics or primary keywords</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Optimizing images and anchor texts significantly improves site accessibility and SEO performance. Alt texts ensure images are properly indexed in Google Image Search, potentially driving additional organic traffic. Correcting generic anchor texts to descriptive, keyword-rich alternatives enhances the semantic context of internal links, helping both search engines and users understand the relevance of linked content, thereby increasing the overall topical authority and improving rankings for target keywords.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 12 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 12</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="12">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-12">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Structured Data Markup Implementation</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Implement Product schema markup (JSON-LD) on product pages, including properties: name, image, price, availability, aggregate ratings
-Add Article schema markup to key blog articles (headline, author, publish date)
-Validate all structured data with Google's Rich Results Test and address validation issues if found</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Adding structured data markup enables rich search results, significantly improving visibility and user engagement on search engine results pages. Product schema markup, in particular, can enable star ratings, price information, and availability statuses directly in search snippets, enhancing the appeal and increasing click-through rates. Article schema can lead to richer presentation in Google searches, increasing organic visibility, driving qualified traffic, and ultimately contributing to higher conversion rates.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Week 13 -->
-            <div class="week-card">
-                <div class="week-header">
-                    <h2 class="week-title">Week 13</h2>
-                    <div class="week-progress">
-                        <span class="week-status" data-week="13">Not Started</span>
-                    </div>
-                </div>
-                <div class="task-container" data-task-id="week-13">
-                    <div class="task-header">
-                        <div class="task-checkbox"></div>
-                        <div class="task-title">Technical Site Health and Crawlability Cleanup</div>
-                    </div>
-                    <div class="task-details">
-                        <div class="task-description">Resolve 4 broken external links identified by audit, either removing or updating to working URLs
-Review and correct 11 pages blocked from crawling (adjust robots.txt or noindex tags appropriately)
-Address and integrate or remove 246 orphaned sitemap pages by creating internal links or removing outdated pages</div>
-                        <div class="expected-outcome">
-                            <div class="expected-outcome-title">Expected Outcome:</div>
-                            <div class="expected-outcome-text">Resolving these technical issues enhances the website's overall crawl efficiency, improves indexation rates, and avoids unnecessary depletion of crawl budget. Fixing broken links reduces bounce rates and improves user satisfaction by ensuring no visitor encounters dead-end pages. Ensuring valuable content isn't accidentally blocked from search crawlers allows all essential pages to be indexed and ranked. Integrating orphaned pages through internal linking maximizes the discoverability of content, driving improved organic traffic and overall SEO health.</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Skip to main content -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <h1>90-Day SEO Plan</h1>
+            <div class="header-actions">
+                <button class="header-btn" onclick="copyLink()">
+                    <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="5" width="8" height="8" rx="1"/>
+                        <path d="M3 11V3h8"/>
+                    </svg>
+                    Copy link
+                </button>
+                <button class="header-btn" onclick="exportPlan()">
+                    <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 12V2M4 6l4-4 4 4M2 12h12"/>
+                    </svg>
+                    Export plan
+                </button>
+                <button class="header-btn" onclick="resetPlan()">
+                    <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 8a6 6 0 1 1 1.5 4"/>
+                        <path d="M2 12V8h4"/>
+                    </svg>
+                    Reset
+                </button>
             </div>
         </div>
+    </header>
 
-        <div class="controls">
-            <button class="btn btn-secondary" onclick="exportProgress()">📥 Export Progress</button>
-            <button class="btn btn-secondary" onclick="clearAllProgress()">🔄 Reset All</button>
-            <button class="btn btn-primary" onclick="generateReport()">📊 Generate Report</button>
-            <button class="btn btn-primary" onclick="retryConnection()">🔌 Retry Connection</button>
-        </div>
+    <!-- Main layout -->
+    <div class="app-layout">
+        <!-- Navigation rail -->
+        <nav class="nav-rail" role="navigation" aria-label="Week navigation">
+            <h2>Sections</h2>
+            <a href="#all" class="nav-item active" onclick="showSection('all', this)">
+                <span class="nav-label">All tasks</span>
+                <div class="nav-progress">
+                    <span id="nav-all-progress">0/13</span>
+                    <svg class="progress-ring" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-bg"/>
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-fill" id="nav-all-ring"/>
+                    </svg>
+                </div>
+            </a>
+            <a href="#foundation" class="nav-item" onclick="showSection('foundation', this)">
+                <span class="nav-label">Weeks 1-4</span>
+                <div class="nav-progress">
+                    <span id="nav-foundation-progress">0/4</span>
+                    <svg class="progress-ring" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-bg"/>
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-fill" id="nav-foundation-ring"/>
+                    </svg>
+                </div>
+            </a>
+            <a href="#acceleration" class="nav-item" onclick="showSection('acceleration', this)">
+                <span class="nav-label">Weeks 5-8</span>
+                <div class="nav-progress">
+                    <span id="nav-acceleration-progress">0/4</span>
+                    <svg class="progress-ring" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-bg"/>
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-fill" id="nav-acceleration-ring"/>
+                    </svg>
+                </div>
+            </a>
+            <a href="#optimization" class="nav-item" onclick="showSection('optimization', this)">
+                <span class="nav-label">Weeks 9-13</span>
+                <div class="nav-progress">
+                    <span id="nav-optimization-progress">0/5</span>
+                    <svg class="progress-ring" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-bg"/>
+                        <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-fill" id="nav-optimization-ring"/>
+                    </svg>
+                </div>
+            </a>
+        </nav>
 
-        <div class="footer">
-            <p>© 2024 Lancer Skincare SEO Implementation Plan</p>
-            <p style="margin-top: 10px; color: #999;">Real-time sync enabled with Supabase</p>
-        </div>
+        <!-- Main content -->
+        <main id="main" class="main-content" role="main">
+            <!-- Utility bar -->
+            <div class="utility-bar">
+                <div class="progress-module">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="main-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span class="progress-text" id="main-progress-text">0 of 13 complete (0%)</span>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="status-filters" role="tablist">
+                        <button class="status-filter active" role="tab" aria-selected="true" onclick="filterByStatus('all', this)">All</button>
+                        <button class="status-filter" role="tab" aria-selected="false" onclick="filterByStatus('todo', this)">To do</button>
+                        <button class="status-filter" role="tab" aria-selected="false" onclick="filterByStatus('progress', this)">In progress</button>
+                        <button class="status-filter" role="tab" aria-selected="false" onclick="filterByStatus('blocked', this)">Blocked</button>
+                        <button class="status-filter" role="tab" aria-selected="false" onclick="filterByStatus('done', this)">Done</button>
+                    </div>
+                    
+                    <div class="search-container">
+                        <svg class="search-icon icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="7" cy="7" r="5"/>
+                            <path d="M11 11l3 3"/>
+                        </svg>
+                        <input type="search" class="search-input" placeholder="Search tasks..." oninput="searchTasks(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sections -->
+            <div id="sections-container">
+                <!-- Content will be dynamically generated -->
+            </div>
+        </main>
     </div>
 
     <script>
-        // Supabase configuration with embedded credentials
-        const SUPABASE_URL = 'https://fihlfqufsltgkxbgonxo.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpaGxmcXVmc2x0a2d4YmdvbnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODA3NTMsImV4cCI6MjA3MTM1Njc1M30.NJP5ngR8Pl1b4l328fGbhCyTcxzzuGtrXF264YLlnxY';
-        
-        let supabase = null;
-        let taskData = {};
-        let isConnected = false;
-        let projectId = 'lancer-seo-90day'; // Unique project identifier
+        // Initialize data
+        let tasks = [];
+        let currentFilter = 'all';
+        let currentSection = 'all';
+        let searchQuery = '';
 
-        // Initialize Supabase connection on load
-        async function initializeSupabase() {
-            try {
-                console.log('Initializing Supabase with:', {
-                    url: SUPABASE_URL,
-                    keyPrefix: SUPABASE_ANON_KEY.substring(0, 20) + '...'
-                });
-                
-                // Initialize Supabase client
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                    auth: {
-                        persistSession: false
+        // Load tasks from localStorage or use default data
+        function loadTasks() {
+            const stored = localStorage.getItem('seo-90-day-tasks');
+            if (stored) {
+                tasks = JSON.parse(stored);
+            } else {
+                // Default tasks from CSV
+                tasks = [
+                    {
+                        id: 'task-1',
+                        week: 1,
+                        section: 'foundation',
+                        title: 'Fix broken links and 404s',
+                        details: 'Repair broken internal links, restore missing images, resolve page errors, and verify crawler access.',
+                        outcome: 'Clean link profile improves user experience and crawl efficiency.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-01-15',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
                     },
-                    global: {
-                        headers: {
-                            'x-client-info': 'lancer-seo-tracker'
+                    {
+                        id: 'task-2',
+                        week: 2,
+                        section: 'foundation',
+                        title: 'Optimize title tags and meta descriptions',
+                        details: 'Shorten long title tags, rewrite with keywords, create unique meta descriptions, fix H1 tags.',
+                        outcome: 'Clear metadata improves click-through rates and prevents keyword confusion.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-01-22',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-3',
+                        week: 3,
+                        section: 'foundation',
+                        title: 'Improve image alt text and compression',
+                        details: 'Add descriptive alt text, compress images, implement lazy loading.',
+                        outcome: 'Optimized images boost SEO, accessibility, and page speed.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-01-29',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-4',
+                        week: 4,
+                        section: 'foundation',
+                        title: 'Enhance site speed and Core Web Vitals',
+                        details: 'Enable compression, minify assets, optimize scripts, improve LCP/FID/CLS scores.',
+                        outcome: 'Faster load times improve user experience and search rankings.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-02-05',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-5',
+                        week: 5,
+                        section: 'acceleration',
+                        title: 'Resolve orphan pages and site structure',
+                        details: 'Integrate 246 orphan pages, reduce site depth, flatten architecture.',
+                        outcome: 'Better crawl efficiency ensures all content is indexed and discoverable.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-02-12',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-6',
+                        week: 6,
+                        section: 'acceleration',
+                        title: 'Strengthen internal linking',
+                        details: 'Create contextual links between content and products, strengthen weak pages.',
+                        outcome: 'Better navigation and SEO flow between pages.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-02-19',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-7',
+                        week: 7,
+                        section: 'acceleration',
+                        title: 'Optimize product page content',
+                        details: 'Expand descriptions, add FAQs, incorporate reviews, highlight trust signals.',
+                        outcome: 'Richer content improves rankings and conversions.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-02-26',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-8',
+                        week: 8,
+                        section: 'acceleration',
+                        title: 'Implement structured data markup',
+                        details: 'Add Product and Article schema, validate with Google Rich Results Test.',
+                        outcome: 'Rich snippets improve visibility and click-through rates.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-03-05',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-9',
+                        week: 9,
+                        section: 'optimization',
+                        title: 'Keyword gap analysis and content calendar',
+                        details: 'Identify high-volume keywords, create 90-day content plan.',
+                        outcome: 'Strategic content captures non-branded organic traffic.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-03-12',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-10',
+                        week: 10,
+                        section: 'optimization',
+                        title: 'On-page SEO tag audit',
+                        details: 'Final review of titles, meta descriptions, and H1 tags.',
+                        outcome: 'Refined metadata improves SERP appearance and CTR.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-03-19',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-11',
+                        week: 11,
+                        section: 'optimization',
+                        title: 'Image and anchor text improvement',
+                        details: 'Add missing alt text, replace generic anchor text.',
+                        outcome: 'Better accessibility and semantic context for links.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-03-26',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-12',
+                        week: 12,
+                        section: 'optimization',
+                        title: 'Advanced structured data',
+                        details: 'Implement additional schema types, ensure validation.',
+                        outcome: 'Enhanced search presence with rich results.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-04-02',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
+                        }
+                    },
+                    {
+                        id: 'task-13',
+                        week: 13,
+                        section: 'optimization',
+                        title: 'Technical health and crawlability',
+                        details: 'Fix broken links, correct crawl blocks, integrate orphaned pages.',
+                        outcome: 'Optimal crawl efficiency and full content indexation.',
+                        status: 'todo',
+                        owner: 'AB',
+                        targetDate: '2025-04-09',
+                        lastUpdated: null,
+                        notes: {
+                            links: [],
+                            decisions: [],
+                            evidence: []
                         }
                     }
-                });
-                
-                console.log('Supabase client created');
-                
-                // Test connection and create table if needed
-                await initializeDatabase();
-                
-                // Load existing data
-                await loadFromSupabase();
-                
-                // Set up real-time subscription
-                subscribeToChanges();
-                
-                isConnected = true;
-                updateConnectionStatus('connected');
-                
-            } catch (error) {
-                console.error('Connection error:', error);
-                console.error('Full error details:', {
-                    message: error.message,
-                    stack: error.stack,
-                    name: error.name
-                });
-                updateConnectionStatus('disconnected');
-                // Fall back to local storage
-                loadFromLocalStorage();
+                ];
+                saveTasks();
             }
         }
 
-        // Initialize database table if it doesn't exist
-        async function initializeDatabase() {
-            try {
-                // First test if we can connect to Supabase at all
-                const testConnection = await fetch(`${SUPABASE_URL}/rest/v1/`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY
-                    }
-                });
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('seo-90-day-tasks', JSON.stringify(tasks));
+            updateProgress();
+        }
+
+        // Render sections and tasks
+        function renderSections() {
+            const container = document.getElementById('sections-container');
+            container.innerHTML = '';
+
+            const sections = [
+                { id: 'foundation', title: 'Weeks 1-4', subtitle: 'Foundation', weeks: [1, 2, 3, 4] },
+                { id: 'acceleration', title: 'Weeks 5-8', subtitle: 'Acceleration', weeks: [5, 6, 7, 8] },
+                { id: 'optimization', title: 'Weeks 9-13', subtitle: 'Optimization and Scale', weeks: [9, 10, 11, 12, 13] }
+            ];
+
+            sections.forEach(section => {
+                const sectionTasks = tasks.filter(t => section.weeks.includes(t.week));
+                const completedCount = sectionTasks.filter(t => t.status === 'done').length;
                 
-                if (!testConnection.ok) {
-                    throw new Error('Cannot connect to Supabase. Please check your project URL.');
+                // Apply filters
+                let filteredTasks = sectionTasks;
+                
+                if (currentSection !== 'all' && section.id !== currentSection) {
+                    return;
                 }
                 
-                // Try to fetch data first to see if table exists
-                const { data, error } = await supabase
-                    .from('lancer_seo_tasks')
-                    .select('*')
-                    .eq('project_id', projectId)
-                    .limit(1);
-                
-                if (error) {
-                    console.log('Database error:', error);
-                    console.log('Error details:', {
-                        message: error.message,
-                        details: error.details,
-                        hint: error.hint,
-                        code: error.code
+                if (currentFilter !== 'all') {
+                    filteredTasks = filteredTasks.filter(t => {
+                        if (currentFilter === 'todo') return t.status === 'todo';
+                        if (currentFilter === 'progress') return t.status === 'progress';
+                        if (currentFilter === 'blocked') return t.status === 'blocked';
+                        if (currentFilter === 'done') return t.status === 'done';
+                        return true;
                     });
-                    
-                    if (error.code === '42P01' || error.message.includes('relation') || error.message.includes('does not exist')) {
-                        // Table doesn't exist
-                        console.log('Table needs to be created. Please run the SQL in Supabase.');
-                        alert('The lancer_seo_tasks table needs to be created in Supabase.\n\nPlease:\n1. Go to your Supabase dashboard\n2. Open the SQL Editor\n3. Run the SQL from supabase_setup.sql file');
-                        console.log(`
-CREATE TABLE IF NOT EXISTS lancer_seo_tasks (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    project_id TEXT NOT NULL,
-    task_id TEXT NOT NULL,
-    completed BOOLEAN DEFAULT false,
-    completed_at TIMESTAMPTZ,
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(project_id, task_id)
-);
-
-ALTER TABLE lancer_seo_tasks ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Enable all for anon" ON lancer_seo_tasks
-    FOR ALL 
-    USING (true) 
-    WITH CHECK (true);
-                        `);
-                    }
-                    throw error;
                 }
                 
-                console.log('Database connection successful!');
-            } catch (error) {
-                console.error('Failed to initialize database:', error);
-                throw error;
-            }
-        }
+                if (searchQuery) {
+                    filteredTasks = filteredTasks.filter(t => 
+                        t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        t.details.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                }
+                
+                if (filteredTasks.length === 0 && (currentFilter !== 'all' || searchQuery)) {
+                    return;
+                }
 
-        // Load data from Supabase
-        async function loadFromSupabase() {
-            updateConnectionStatus('syncing');
-            
-            const { data, error } = await supabase
-                .from('lancer_seo_tasks')
-                .select('*')
-                .eq('project_id', projectId);
-            
-            if (error) {
-                console.error('Load error:', error);
-                updateConnectionStatus('disconnected');
-                return;
-            }
-            
-            // Clear and reload task data
-            taskData = {};
-            document.querySelectorAll('.task-container').forEach(task => {
-                task.classList.remove('completed');
+                const sectionEl = document.createElement('section');
+                sectionEl.className = 'section';
+                sectionEl.id = section.id;
+                sectionEl.innerHTML = `
+                    <div class="section-header" onclick="toggleSection('${section.id}')">
+                        <div class="section-title">
+                            <svg class="collapse-icon icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 6l3 3 3-3"/>
+                            </svg>
+                            <span>${section.title} - ${section.subtitle}</span>
+                        </div>
+                        <div class="section-meta">
+                            <span>${completedCount}/${sectionTasks.length} complete</span>
+                            <svg class="progress-ring" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-bg"/>
+                                <circle cx="12" cy="12" r="10" fill="none" stroke-width="2" class="progress-ring-fill" 
+                                    style="stroke-dashoffset: ${62.83 - (completedCount / sectionTasks.length * 62.83)}"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="section-content">
+                        <div class="cards-grid">
+                            ${filteredTasks.map(task => renderTaskCard(task)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(sectionEl);
             });
             
-            // Apply loaded data
-            if (data) {
-                data.forEach(record => {
-                    taskData[record.task_id] = record.completed;
-                    if (record.completed) {
-                        const element = document.querySelector(`[data-task-id="${record.task_id}"]`);
-                        if (element) {
-                            element.classList.add('completed');
-                        }
-                    }
-                });
-            }
-            
-            updateStats();
-            updateWeekStatus();
-            updateConnectionStatus('connected');
-            updateLastSync();
-        }
-
-        // Load from local storage as fallback
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('lancerSEOProgress');
-            if (saved) {
-                taskData = JSON.parse(saved);
-                Object.keys(taskData).forEach(taskId => {
-                    if (taskData[taskId]) {
-                        const element = document.querySelector(`[data-task-id="${taskId}"]`);
-                        if (element) {
-                            element.classList.add('completed');
-                        }
-                    }
-                });
-            }
-            updateStats();
-            updateWeekStatus();
-        }
-
-        // Save to local storage
-        function saveToLocalStorage() {
-            localStorage.setItem('lancerSEOProgress', JSON.stringify(taskData));
-        }
-
-        // Save task to Supabase
-        async function saveToSupabase(taskId, completed) {
-            if (!supabase || !isConnected) {
-                saveToLocalStorage();
-                return;
-            }
-            
-            updateConnectionStatus('syncing');
-            
-            const { data, error } = await supabase
-                .from('lancer_seo_tasks')
-                .upsert({
-                    project_id: projectId,
-                    task_id: taskId,
-                    completed: completed,
-                    completed_at: completed ? new Date().toISOString() : null,
-                    updated_at: new Date().toISOString()
-                }, {
-                    onConflict: 'project_id,task_id'
-                });
-            
-            if (error) {
-                console.error('Save error:', error);
-                updateConnectionStatus('disconnected');
-                saveToLocalStorage();
-            } else {
-                updateConnectionStatus('connected');
-                updateLastSync();
+            if (container.innerHTML === '') {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No tasks found</h3>
+                        <p>Try adjusting your filters or search query</p>
+                    </div>
+                `;
             }
         }
 
-        // Subscribe to real-time changes
-        function subscribeToChanges() {
-            if (!supabase) return;
+        // Render individual task card
+        function renderTaskCard(task) {
+            const statusClass = task.status;
+            const statusText = task.status === 'todo' ? 'To do' : 
+                              task.status === 'progress' ? 'In progress' :
+                              task.status === 'blocked' ? 'Blocked' : 'Done';
             
-            supabase
-                .channel('task-changes')
-                .on('postgres_changes', 
-                    { 
-                        event: '*', 
-                        schema: 'public', 
-                        table: 'lancer_seo_tasks',
-                        filter: `project_id=eq.${projectId}`
-                    }, 
-                    (payload) => {
-                        console.log('Change received:', payload);
-                        handleRealtimeChange(payload);
-                    }
-                )
-                .subscribe();
-        }
-
-        // Handle real-time changes
-        function handleRealtimeChange(payload) {
-            if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-                const record = payload.new;
-                const element = document.querySelector(`[data-task-id="${record.task_id}"]`);
-                
-                if (element) {
-                    // Add updating class for visual feedback
-                    element.parentElement.classList.add('updating');
+            const lastUpdated = task.lastUpdated ? 
+                `Saved ${formatTimeAgo(task.lastUpdated)}` : '';
+            
+            return `
+                <div class="task-card" data-task-id="${task.id}" data-status="${task.status}">
+                    <div class="card-header">
+                        <div class="card-header-left">
+                            <input type="checkbox" 
+                                class="task-checkbox" 
+                                ${task.status === 'done' ? 'checked' : ''}
+                                onchange="toggleTaskComplete('${task.id}', this.checked)">
+                            <div>
+                                <h3 class="task-title">
+                                    <span class="task-week">Week ${task.week}</span> - ${task.title}
+                                </h3>
+                            </div>
+                        </div>
+                        <button class="status-pill ${statusClass}" onclick="cycleStatus('${task.id}')">
+                            ${statusText}
+                        </button>
+                    </div>
                     
-                    setTimeout(() => {
-                        if (record.completed) {
-                            element.classList.add('completed');
-                        } else {
-                            element.classList.remove('completed');
-                        }
-                        taskData[record.task_id] = record.completed;
-                        updateStats();
-                        updateWeekStatus();
-                        updateLastSync();
-                        element.parentElement.classList.remove('updating');
-                    }, 300);
-                }
-            }
-        }
-
-        // Update connection status display
-        function updateConnectionStatus(status) {
-            const statusElement = document.getElementById('connectionStatus');
-            statusElement.className = 'connection-status ' + status;
-            
-            switch(status) {
-                case 'connected':
-                    statusElement.textContent = '✅ Connected - Real-time sync active';
-                    break;
-                case 'disconnected':
-                    statusElement.textContent = '⚠️ Offline mode - Progress saved locally';
-                    break;
-                case 'syncing':
-                    statusElement.textContent = '🔄 Syncing...';
-                    break;
-                default:
-                    statusElement.textContent = '📡 Connecting to Supabase...';
-            }
-        }
-
-        // Update last sync time
-        function updateLastSync() {
-            const now = new Date();
-            document.getElementById('lastUpdate').textContent = 
-                `Last synced: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}`;
+                    <div class="card-meta">
+                        <div class="meta-item">
+                            <svg class="meta-icon icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="10" height="10" rx="1"/>
+                                <path d="M3 7h10M7 4v10M11 2v2M5 2v2"/>
+                            </svg>
+                            <span>Due: ${formatDate(task.targetDate)}</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="8" cy="6" r="3"/>
+                                <path d="M3 14c0-2.5 2-4 5-4s5 1.5 5 4"/>
+                            </svg>
+                            <span>Owner: ${task.owner}</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="8" cy="8" r="7"/>
+                                <path d="M8 5v3l2 2"/>
+                            </svg>
+                            <span>${lastUpdated || 'Not saved yet'}</span>
+                        </div>
+                    </div>
+                    
+                    <button class="details-toggle" onclick="toggleDetails('${task.id}')">
+                        <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 6l3 3 3-3"/>
+                        </svg>
+                        <span>Show details</span>
+                    </button>
+                    
+                    <div class="details-content" id="details-${task.id}">
+                        <p><strong>What this is:</strong> ${task.details}</p>
+                        <p><strong>Expected outcome:</strong> ${task.outcome}</p>
+                    </div>
+                    
+                    <div class="notes-section">
+                        ${task.status === 'blocked' ? `
+                        <div class="notes-group">
+                            <span class="notes-label">What is blocking this?</span>
+                            <div class="notes-content">
+                                <textarea class="note-input" placeholder="Describe the blocker..." 
+                                    onblur="saveBlocker('${task.id}', this.value)">${task.blocker || ''}</textarea>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="notes-group">
+                            <span class="notes-label">Links</span>
+                            <div class="notes-content">
+                                ${task.notes.links.map(link => `
+                                    <div class="note-chip">
+                                        <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M7 9l2-2-2-2M9 7H3"/>
+                                            <rect x="3" y="3" width="10" height="10" rx="1"/>
+                                        </svg>
+                                        <a href="${link.url}" target="_blank">${link.title}</a>
+                                    </div>
+                                `).join('')}
+                                <button class="add-note-btn" onclick="addLink('${task.id}')">
+                                    <span>+</span> Add link
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="notes-group">
+                            <span class="notes-label">Decisions</span>
+                            <div class="notes-content">
+                                ${task.notes.decisions.map(decision => `
+                                    <div class="note-chip">
+                                        <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M3 8l3 3 7-7"/>
+                                        </svg>
+                                        <span>${decision}</span>
+                                    </div>
+                                `).join('')}
+                                <button class="add-note-btn" onclick="addDecision('${task.id}')">
+                                    <span>+</span> Add decision
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="notes-group">
+                            <span class="notes-label">Evidence</span>
+                            <div class="notes-content">
+                                ${task.notes.evidence.map(evidence => `
+                                    <div class="note-chip">
+                                        <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="5" width="10" height="8" rx="1"/>
+                                            <path d="M6 8h4M6 10h4M11 3L8 5"/>
+                                        </svg>
+                                        <span>${evidence}</span>
+                                    </div>
+                                `).join('')}
+                                <button class="add-note-btn" onclick="addEvidence('${task.id}')">
+                                    <span>+</span> Add evidence
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Toggle task completion
-        async function toggleTask(taskId) {
-            const newState = !taskData[taskId];
-            taskData[taskId] = newState;
-            
-            const element = document.querySelector(`[data-task-id="${taskId}"]`);
-            if (newState) {
-                element.classList.add('completed');
-            } else {
-                element.classList.remove('completed');
+        function toggleTaskComplete(taskId, checked) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.status = checked ? 'done' : 'todo';
+                task.lastUpdated = new Date().toISOString();
+                saveTasks();
+                renderSections();
             }
-            
-            updateStats();
-            updateWeekStatus();
-            
-            // Save to Supabase and local storage
-            await saveToSupabase(taskId, newState);
         }
 
-        // Update statistics
-        function updateStats() {
-            const allTasks = document.querySelectorAll('.task-container');
-            const completedTasks = document.querySelectorAll('.task-container.completed');
-            
-            const total = allTasks.length;
-            const completed = completedTasks.length;
-            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-            document.getElementById('totalTasks').textContent = total;
-            document.getElementById('completedTasks').textContent = completed;
-            document.getElementById('percentComplete').textContent = percentage + '%';
-            
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = percentage + '%';
-            progressBar.textContent = percentage + '%';
+        // Cycle through status states
+        function cycleStatus(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                const states = ['todo', 'progress', 'blocked', 'done'];
+                const currentIndex = states.indexOf(task.status);
+                task.status = states[(currentIndex + 1) % states.length];
+                task.lastUpdated = new Date().toISOString();
+                saveTasks();
+                renderSections();
+            }
         }
 
-        // Update week status
-        function updateWeekStatus() {
-            document.querySelectorAll('.week-card').forEach((weekCard, index) => {
-                const weekNum = index + 1;
-                const task = weekCard.querySelector('.task-container');
-                const statusElement = weekCard.querySelector('.week-status');
+        // Toggle details visibility
+        function toggleDetails(taskId) {
+            const details = document.getElementById(`details-${taskId}`);
+            const button = event.target.closest('.details-toggle');
+            
+            if (details.classList.contains('visible')) {
+                details.classList.remove('visible');
+                button.querySelector('span').textContent = 'Show details';
+            } else {
+                details.classList.add('visible');
+                button.querySelector('span').textContent = 'Hide details';
+            }
+        }
+
+        // Toggle section collapse
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
+            
+            // Save collapsed state
+            const collapsed = JSON.parse(localStorage.getItem('collapsed-sections') || '[]');
+            if (section.classList.contains('collapsed')) {
+                if (!collapsed.includes(sectionId)) {
+                    collapsed.push(sectionId);
+                }
+            } else {
+                const index = collapsed.indexOf(sectionId);
+                if (index > -1) {
+                    collapsed.splice(index, 1);
+                }
+            }
+            localStorage.setItem('collapsed-sections', JSON.stringify(collapsed));
+        }
+
+        // Add link
+        function addLink(taskId) {
+            const url = prompt('Enter link URL:');
+            if (url) {
+                const title = prompt('Enter link title:') || url;
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.notes.links.push({ url, title });
+                    task.lastUpdated = new Date().toISOString();
+                    saveTasks();
+                    renderSections();
+                }
+            }
+        }
+
+        // Add decision
+        function addDecision(taskId) {
+            const decision = prompt('Enter decision:');
+            if (decision) {
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.notes.decisions.push(decision);
+                    task.lastUpdated = new Date().toISOString();
+                    saveTasks();
+                    renderSections();
+                }
+            }
+        }
+
+        // Add evidence
+        function addEvidence(taskId) {
+            const evidence = prompt('Enter evidence:');
+            if (evidence) {
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.notes.evidence.push(evidence);
+                    task.lastUpdated = new Date().toISOString();
+                    saveTasks();
+                    renderSections();
+                }
+            }
+        }
+
+        // Save blocker
+        function saveBlocker(taskId, value) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.blocker = value;
+                task.lastUpdated = new Date().toISOString();
+                saveTasks();
+            }
+        }
+
+        // Filter by status
+        function filterByStatus(status, button) {
+            currentFilter = status;
+            
+            // Update button states
+            document.querySelectorAll('.status-filter').forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
+            
+            renderSections();
+        }
+
+        // Search tasks
+        function searchTasks(query) {
+            searchQuery = query;
+            renderSections();
+        }
+
+        // Show section
+        function showSection(sectionId, navItem) {
+            currentSection = sectionId;
+            
+            // Update nav states
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            navItem.classList.add('active');
+            
+            renderSections();
+        }
+
+        // Update progress indicators
+        function updateProgress() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.status === 'done').length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            // Main progress
+            document.getElementById('main-progress-fill').style.width = `${percentage}%`;
+            document.getElementById('main-progress-text').textContent = `${completed} of ${total} complete (${percentage}%)`;
+            
+            // Navigation progress
+            const sections = [
+                { id: 'all', weeks: [1,2,3,4,5,6,7,8,9,10,11,12,13] },
+                { id: 'foundation', weeks: [1,2,3,4] },
+                { id: 'acceleration', weeks: [5,6,7,8] },
+                { id: 'optimization', weeks: [9,10,11,12,13] }
+            ];
+            
+            sections.forEach(section => {
+                const sectionTasks = tasks.filter(t => section.weeks.includes(t.week));
+                const sectionCompleted = sectionTasks.filter(t => t.status === 'done').length;
+                const sectionPercentage = sectionTasks.length > 0 ? (sectionCompleted / sectionTasks.length) : 0;
                 
-                if (task && task.classList.contains('completed')) {
-                    statusElement.textContent = '✅ Completed';
-                    statusElement.style.color = '#28a745';
-                } else {
-                    statusElement.textContent = 'Not Started';
-                    statusElement.style.color = '#666';
+                const progressText = document.getElementById(`nav-${section.id}-progress`);
+                if (progressText) {
+                    progressText.textContent = `${sectionCompleted}/${sectionTasks.length}`;
+                }
+                
+                const progressRing = document.getElementById(`nav-${section.id}-ring`);
+                if (progressRing) {
+                    progressRing.style.strokeDashoffset = 62.83 - (sectionPercentage * 62.83);
                 }
             });
         }
 
-        // Export progress
-        function exportProgress() {
-            const tasks = [];
-            document.querySelectorAll('.task-container').forEach(task => {
-                const taskId = task.getAttribute('data-task-id');
-                const weekNum = taskId.replace('week-', '');
-                const title = task.querySelector('.task-title').textContent;
-                const isCompleted = task.classList.contains('completed');
-                
-                tasks.push({
-                    week: parseInt(weekNum),
-                    title: title,
-                    completed: isCompleted,
-                    completedDate: isCompleted && taskData[taskId] ? new Date().toISOString() : null
-                });
-            });
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
 
-            const exportData = {
-                planName: 'Lancer Skincare 90-Day SEO Implementation Plan',
-                exportDate: new Date().toISOString(),
-                stats: {
-                    total: document.getElementById('totalTasks').textContent,
-                    completed: document.getElementById('completedTasks').textContent,
-                    percentage: document.getElementById('percentComplete').textContent
-                },
-                tasks: tasks
+        // Format time ago
+        function formatTimeAgo(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000); // seconds
+            
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+            return `${Math.floor(diff / 86400)} days ago`;
+        }
+
+        // Copy link
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+
+        // Export plan
+        function exportPlan() {
+            const data = {
+                tasks: tasks,
+                exportDate: new Date().toISOString()
             };
             
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = `lancer-seo-progress-${new Date().toISOString().split('T')[0]}.json`;
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-        }
-
-        // Clear all progress
-        function clearAllProgress() {
-            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-                taskData = {};
-                localStorage.removeItem('lancerSEOProgress');
-                
-                // Clear from Supabase if connected
-                if (supabase && isConnected) {
-                    supabase
-                        .from('lancer_seo_tasks')
-                        .delete()
-                        .eq('project_id', projectId)
-                        .then(() => {
-                            console.log('Cleared from Supabase');
-                        });
-                }
-                
-                document.querySelectorAll('.task-container').forEach(item => {
-                    item.classList.remove('completed');
-                });
-                updateStats();
-                updateWeekStatus();
-            }
-        }
-
-        // Show connection help
-        function showConnectionHelp() {
-            if (!isConnected) {
-                alert(`📡 Connection Status: Offline
-
-Your Supabase project appears to be paused.
-
-To restore cloud sync:
-1. Go to supabase.com/dashboard
-2. Select your project
-3. Click "Restore project" if it shows as paused
-4. Wait 30-60 seconds
-5. Click "Retry Connection" button below
-
-Note: Your progress is being saved locally and will sync once connected.`);
-            }
-        }
-        
-        // Retry connection to Supabase
-        async function retryConnection() {
-            console.log('Retrying Supabase connection...');
-            updateConnectionStatus('syncing');
-            await initializeSupabase();
-        }
-        
-        // Generate report
-        function generateReport() {
-            const completed = document.getElementById('completedTasks').textContent;
-            const total = document.getElementById('totalTasks').textContent;
-            const percentage = document.getElementById('percentComplete').textContent;
-            
-            let report = `LANCER SKINCARE - 90 DAY SEO IMPLEMENTATION PLAN PROGRESS REPORT\n`;
-            report += `${'='.repeat(60)}\n`;
-            report += `Generated: ${new Date().toLocaleString()}\n\n`;
-            report += `OVERALL PROGRESS: ${completed}/${total} tasks (${percentage})\n\n`;
-            
-            report += `WEEK-BY-WEEK STATUS:\n`;
-            report += `${'-'.repeat(60)}\n\n`;
-            
-            // Detailed task list
-            document.querySelectorAll('.week-card').forEach((weekCard, index) => {
-                const weekNum = index + 1;
-                const task = weekCard.querySelector('.task-container');
-                const title = task.querySelector('.task-title').textContent;
-                const isCompleted = task.classList.contains('completed');
-                const status = isCompleted ? '[✓ COMPLETED]' : '[ ] PENDING';
-                
-                report += `Week ${weekNum}: ${title}\n`;
-                report += `Status: ${status}\n`;
-                
-                if (!isCompleted) {
-                    const description = task.querySelector('.task-description').textContent;
-                    const firstLine = description.split('\n')[0];
-                    report += `Next Action: ${firstLine.substring(0, 100)}...\n`;
-                }
-                
-                report += '\n';
-            });
-            
-            report += `\n${'='.repeat(60)}\n`;
-            report += `RECOMMENDATIONS:\n`;
-            report += `${'-'.repeat(60)}\n`;
-            
-            const completedCount = parseInt(completed);
-            if (completedCount < 4) {
-                report += `• Focus on completing Weeks 1-4 (Technical Foundation)\n`;
-                report += `• These tasks form the basis for all other optimizations\n`;
-            } else if (completedCount < 8) {
-                report += `• Good progress on technical foundation\n`;
-                report += `• Prioritize site structure and content optimization next\n`;
-            } else if (completedCount < 13) {
-                report += `• Excellent progress - entering final optimization phase\n`;
-                report += `• Focus on structured data and content calendar completion\n`;
-            } else {
-                report += `• All tasks completed! Consider planning the next 90-day cycle\n`;
-                report += `• Monitor metrics and iterate on successful strategies\n`;
-            }
-            
-            // Create and download text file
-            const blob = new Blob([report], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `lancer-seo-report-${new Date().toISOString().split('T')[0]}.txt`;
+            a.download = '90-day-seo-plan.json';
             a.click();
+            URL.revokeObjectURL(url);
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Supabase connection
-            initializeSupabase();
-            
-            // Add click listeners
-            document.querySelectorAll('.task-container').forEach(task => {
-                task.addEventListener('click', function() {
-                    const taskId = this.getAttribute('data-task-id');
-                    toggleTask(taskId);
-                });
-            });
-        });
-
-        // Auto-save reminder
-        window.addEventListener('beforeunload', function() {
-            if (!isConnected) {
-                saveToLocalStorage();
+        // Reset plan
+        function resetPlan() {
+            if (confirm('Are you sure you want to reset all tasks? This cannot be undone.')) {
+                localStorage.removeItem('seo-90-day-tasks');
+                localStorage.removeItem('collapsed-sections');
+                loadTasks();
+                renderSections();
             }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasks();
+            renderSections();
+            
+            // Restore collapsed sections
+            const collapsed = JSON.parse(localStorage.getItem('collapsed-sections') || '[]');
+            collapsed.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.add('collapsed');
+                }
+            });
         });
     </script>
 </body>
