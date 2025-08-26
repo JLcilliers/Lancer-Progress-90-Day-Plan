@@ -874,12 +874,25 @@
             updateConnectionStatus('connecting', '🔄 Connecting to database...');
             
             try {
+                // Test Supabase connection first
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .select('count(*)')
+                    .limit(1);
+                
+                if (error) {
+                    console.error('Supabase connection test failed:', error);
+                    throw error;
+                }
+                
+                console.log('Supabase connection test successful');
                 await loadTasksFromSupabase();
                 isConnected = true;
                 updateConnectionStatus('connected', '✅ Connected - Real-time sync enabled');
                 console.log('Connected to Supabase');
             } catch (error) {
                 console.error('Failed to connect to Supabase:', error);
+                console.error('Error details:', error.message, error.code, error.hint);
                 updateConnectionStatus('error', '⚠️ Database connection failed - using local mode');
                 loadDefaultTasks();
             }

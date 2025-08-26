@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #ccc;
+        }
+        .success {
+            border-left-color: #4caf50;
+            background: #f1f8e9;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        .info {
+            border-left-color: #2196f3;
+            background: #e3f2fd;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Supabase Connection Test</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testTableExists()">Test Table Exists</button>
+    <button onclick="testInsert()">Test Insert</button>
+    <button onclick="clearResults()">Clear Results</button>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://fihlfqufsltgkxbgonxo.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpaGxmcXVmc2x0a2d4YmdvbnhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODA3NTMsImV4cCI6MjA3MTM1Njc1M30.NJP5ngR8Pl1b4l328fGbhCyTcxzzuGtrXF264YLlnxY';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        function addResult(title, type, content) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${content}</pre>
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        async function testConnection() {
+            try {
+                addResult('🔄 Testing Connection', 'info', 'Attempting to connect to Supabase...');
+                
+                const { data, error } = await supabase.auth.getSession();
+                
+                if (error) {
+                    addResult('❌ Connection Test Failed', 'error', `Error: ${error.message}\nCode: ${error.code || 'unknown'}`);
+                } else {
+                    addResult('✅ Connection Test Passed', 'success', 'Successfully connected to Supabase!');
+                }
+            } catch (error) {
+                addResult('❌ Connection Test Failed', 'error', `Error: ${error.message}`);
+            }
+        }
+        
+        async function testTableExists() {
+            try {
+                addResult('🔄 Testing Table Access', 'info', 'Checking if lancer_seo_tasks table exists...');
+                
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .select('*')
+                    .limit(1);
+                
+                if (error) {
+                    addResult('❌ Table Test Failed', 'error', 
+                        `Error: ${error.message}\n` +
+                        `Code: ${error.code || 'unknown'}\n` +
+                        `Details: ${error.details || 'none'}\n` +
+                        `Hint: ${error.hint || 'none'}`
+                    );
+                } else {
+                    addResult('✅ Table Test Passed', 'success', 
+                        `Table exists and is accessible!\n` +
+                        `Found ${data ? data.length : 0} rows\n` +
+                        `Sample data: ${JSON.stringify(data, null, 2)}`
+                    );
+                }
+            } catch (error) {
+                addResult('❌ Table Test Failed', 'error', `Error: ${error.message}`);
+            }
+        }
+        
+        async function testInsert() {
+            try {
+                addResult('🔄 Testing Insert', 'info', 'Attempting to insert test data...');
+                
+                const testData = {
+                    project_id: 'test-' + Date.now(),
+                    week: 99,
+                    task_title: 'Test Task',
+                    detailed_fix: 'Test description',
+                    expected_outcome: 'Test outcome',
+                    completed: false
+                };
+                
+                const { data, error } = await supabase
+                    .from('lancer_seo_tasks')
+                    .insert(testData)
+                    .select();
+                
+                if (error) {
+                    addResult('❌ Insert Test Failed', 'error', 
+                        `Error: ${error.message}\n` +
+                        `Code: ${error.code || 'unknown'}\n` +
+                        `Details: ${error.details || 'none'}\n` +
+                        `Hint: ${error.hint || 'none'}`
+                    );
+                } else {
+                    addResult('✅ Insert Test Passed', 'success', 
+                        `Successfully inserted test data!\n` +
+                        `Inserted data: ${JSON.stringify(data, null, 2)}`
+                    );
+                    
+                    // Clean up test data
+                    await supabase
+                        .from('lancer_seo_tasks')
+                        .delete()
+                        .eq('project_id', testData.project_id);
+                        
+                    addResult('🧹 Cleanup', 'info', 'Test data cleaned up');
+                }
+            } catch (error) {
+                addResult('❌ Insert Test Failed', 'error', `Error: ${error.message}`);
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Auto-run basic tests on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            addResult('📋 Supabase Configuration', 'info', 
+                `URL: ${SUPABASE_URL}\n` +
+                `Anon Key: ${SUPABASE_ANON_KEY.substring(0, 20)}...`
+            );
+        });
+    </script>
+</body>
+</html>
