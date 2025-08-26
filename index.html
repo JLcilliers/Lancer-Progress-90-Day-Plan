@@ -936,9 +936,9 @@
                         targetDate: getTargetDate(row.week),
                         lastUpdated: row.updated_at,
                         notes: {
-                            links: row.notes ? JSON.parse(row.notes).links || [] : [],
-                            decisions: row.notes ? JSON.parse(row.notes).decisions || [] : [],
-                            evidence: row.notes ? JSON.parse(row.notes).evidence || [] : []
+                            links: row.notes && typeof row.notes === 'object' ? row.notes.links || [] : [],
+                            decisions: row.notes && typeof row.notes === 'object' ? row.notes.decisions || [] : [],
+                            evidence: row.notes && typeof row.notes === 'object' ? row.notes.evidence || [] : []
                         }
                     };
                 });
@@ -1204,7 +1204,7 @@
                     detailed_fix: task.details,
                     expected_outcome: task.outcome,
                     completed: task.status === 'done',
-                    notes: JSON.stringify(task.notes),
+                    notes: task.notes,
                     updated_at: new Date().toISOString()
                 }));
 
@@ -1241,7 +1241,7 @@
                         detailed_fix: task.details,
                         expected_outcome: task.outcome,
                         completed: status === 'done',
-                        notes: JSON.stringify(task.notes),
+                        notes: task.notes,
                         updated_at: new Date().toISOString()
                     }, {
                         onConflict: 'project_id,week'
