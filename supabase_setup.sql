@@ -22,8 +22,11 @@ CREATE INDEX IF NOT EXISTS idx_lancer_seo_tasks_week ON lancer_seo_tasks(week);
 -- Enable Row Level Security
 ALTER TABLE lancer_seo_tasks ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policy if it exists and create new one
+DROP POLICY IF EXISTS "Allow all operations on lancer_seo_tasks" ON lancer_seo_tasks;
+
 -- Create a policy that allows all operations (since this is for the client to view progress)
-CREATE POLICY IF NOT EXISTS "Allow all operations on lancer_seo_tasks" ON lancer_seo_tasks
+CREATE POLICY "Allow all operations on lancer_seo_tasks" ON lancer_seo_tasks
     FOR ALL USING (true) WITH CHECK (true);
 
 -- Insert initial data if the table is empty
