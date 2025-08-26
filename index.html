@@ -8,6 +8,11 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Force cache refresh -->
+    <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+    
     <style>
         :root {
             /* Spacing scale (8px baseline) */
@@ -873,8 +878,12 @@
         async function initializeApp() {
             updateConnectionStatus('connecting', '🔄 Connecting to database...');
             
+            console.log('Supabase URL:', SUPABASE_URL);
+            console.log('Supabase Key (first 20 chars):', SUPABASE_ANON_KEY.substring(0, 20));
+            
             try {
                 // Test Supabase connection first
+                console.log('Testing connection with select("*")...');
                 const { data, error } = await supabase
                     .from('lancer_seo_tasks')
                     .select('*')
@@ -882,6 +891,7 @@
                 
                 if (error) {
                     console.error('Supabase connection test failed:', error);
+                    console.error('Full error object:', JSON.stringify(error, null, 2));
                     throw error;
                 }
                 
