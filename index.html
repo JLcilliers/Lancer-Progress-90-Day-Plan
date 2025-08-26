@@ -877,7 +877,7 @@
                 // Test Supabase connection first
                 const { data, error } = await supabase
                     .from('lancer_seo_tasks')
-                    .select('count(*)')
+                    .select('*')
                     .limit(1);
                 
                 if (error) {
